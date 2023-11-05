@@ -4,3 +4,12 @@
 [submodule "42_ft_printf"]
 	path = 42_ft_printf
 	url = https://github.com/AliHaine/42_ft_printf.git
+[submodule "42_philosophers"]
+	path = 42_philosophers
+	url = https://github.com/AliHaine/42_philosophers.git
+[submodule "42_push_swap"]
+	path = 42_push_swap
+	url = https://github.com/AliHaine/42_push_swap.git
+[submodule "42_minitalk"]
+	path = 42_minitalk
+	url = https://github.com/AliHaine/42_minitalk.git
