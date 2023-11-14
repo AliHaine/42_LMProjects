@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  mariadb:
+    container_name: mariadb
+    build: ./images/mariadb/.
+    image: mariadb:latest
+    volume: 
+      - mariadb:/var/lib/mysql
+    restart: always
+  wordpress:
+    container_name: wordpress
+    build: ./images/wordpress/.
+    depends_on:
+      - mariadb
+    image: wordpress:latest
+    ports:
+      - "8000:80"
+    restart: always
