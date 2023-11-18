@@ -8,3 +8,7 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/nginx-s
 VOLUME /etc/hosts
 
 EXPOSE 443
+
+#useful
+
+#docker run -d -v ${PWD}/hosts:/etc/hosts --name nginx1 -p 443:443 nginx1
