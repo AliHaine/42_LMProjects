@@ -2,10 +2,9 @@ FROM nginx:latest
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY index.html /usr/share/nginx/html/
-
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/nginx-selfsigned.key -out /etc/ssl/nginx-selfsigned.crt \
             -subj "/C=FR/ST=FRANCE/L=MULHOUSE/O=42/OU=Unit/CN=localhost"
 
+VOLUME /etc/hosts
 
-EXPOSE 80
+EXPOSE 443
