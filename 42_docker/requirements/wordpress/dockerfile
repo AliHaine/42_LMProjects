@@ -1,5 +1,13 @@
-FROM wordpress:latest
+FROM debian:bullseye
 
-COPY wp-config.php /var/www/html
+RUN     apt update -y && \
+        apt install php-fpm php-mysql -y && \
+        apt install curl -y
+
+COPY wp_setup.sh /
+COPY wp-config.php /
+COPY www.conf /etc/php/7.3/fpm/pool.d/
 
 EXPOSE 2605
+
+CMD ["/wp_setup.sh"]
