@@ -3,3 +3,6 @@ up:
 
 down:
 	@docker compose down
+
+clear:
+	@docker compose rm -f -s

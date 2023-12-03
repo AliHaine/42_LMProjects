@@ -10,6 +10,7 @@ if [ -d "/var/lib/mysql/$MYSQL_DATABASE" ]
 then
 
 	echo "Database already exists"
+	/etc/init.d/mariadb stop
 else
 
 # Set root option so that connexion without root password is not possible

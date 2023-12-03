@@ -6,18 +6,18 @@ RUN     apt update -y && \
         apt install curl -y
 RUN     mkdir /run/php
 
-COPY wp_setup.sh /
-COPY www.conf /etc/php/7.3/fpm/pool.d/
+COPY wp_setup.sh /var/www/html/
+COPY www.conf /etc/php/7.4/fpm/pool.d/
 
-RUN chmod +x wp_setup.sh
-ENTRYPOINT ["/wp_setup.sh"]
-
-COPY wp-config.php /var/www/html/
+RUN chmod +x /var/www/html/wp_setup.sh
+ENTRYPOINT ["/var/www/html/wp_setup.sh"]
 
 WORKDIR /var/www/html/
 
 EXPOSE 9000
 
-CMD ["/wp_setup.sh"]
+CMD ["/var/www/html/wp_setup.sh"]
+
+COPY wp-config.php /var/www/html/
 
 CMD ["/usr/sbin/php-fpm7.4", "-F"]
