@@ -2,13 +2,25 @@ FROM debian:bullseye
 
 RUN apt-get update -y && \
     apt-get install -y mariadb-server mariadb-client
-
 RUN mkdir -p /var/run/mysqld && \
     chown -R mysql:mysql /var/run/mysqld && \
     chmod 777 /var/run/mysqld
 
-COPY ./50-server.cnf /etc/mysql/mariadb.conf.d
+#env for testing
+ENV DOMAIN_NAME ayagmur.42.fr
+ENV MYSQL_HOSTNAME mariadb
+ENV MYSQL_DATABASE wordpress
+ENV MYSQL_USER jesuisleuser
+ENV MYSQL_PASSWORD jesuislemdp
+ENV MYSQL_ROOT_PASSWORD jesuisleroot
+ENV MARIADB_ROOT_PASSWORD jesuisleroot
 
+COPY ./50-server.cnf /etc/mysql/mariadb.conf.d
 COPY mariadb_script.sh /
+COPY example.sql /usr/local/bin/wordpress.sql
+
+EXPOSE 3306
 
 ENTRYPOINT [ "/mariadb_script.sh" ]
+
+CMD ["mysqld", "--bind-address=0.0.0.0"]

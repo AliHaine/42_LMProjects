@@ -2,12 +2,22 @@ FROM debian:bullseye
 
 RUN     apt update -y && \
         apt install php-fpm php-mysql -y && \
+        apt-get install -y wget && \
         apt install curl -y
+RUN     mkdir /run/php
 
 COPY wp_setup.sh /
-COPY wp-config.php /
 COPY www.conf /etc/php/7.3/fpm/pool.d/
 
-EXPOSE 2605
+RUN chmod +x wp_setup.sh
+ENTRYPOINT ["/wp_setup.sh"]
+
+COPY wp-config.php /var/www/html/
+
+WORKDIR /var/www/html/
+
+EXPOSE 9000
 
 CMD ["/wp_setup.sh"]
+
+CMD ["/usr/sbin/php-fpm7.4", "-F"]

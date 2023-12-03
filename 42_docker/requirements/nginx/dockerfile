@@ -2,11 +2,12 @@ FROM debian:bullseye
 
 RUN apt-get update && apt-get install -y nginx openssl
 
-COPY nginx.conf /etc/nginx/sites-available
-COPY index.html /usr/share/nginx/html/
+COPY nginx.conf /etc/nginx/conf.d
 
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/nginx-selfsigned.key -out /etc/ssl/nginx-selfsigned.crt \
             -subj "/C=FR/ST=FRANCE/L=MULHOUSE/O=42/OU=Unit/CN=localhost"
+
+RUN mkdir -p /run/nginx
 
 EXPOSE 443
 
