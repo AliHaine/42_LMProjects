@@ -45,7 +45,7 @@ echo "No error occured."
 #echo "Import databse from wordpress.sql"
 
 #Import database in the mysql command line
-mysql -uroot -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < /usr/local/bin/wordpress.sql
+mysql -uroot -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < /usr/local/bin/wordpress_data.sql
 
 /etc/init.d/mariadb stop
 

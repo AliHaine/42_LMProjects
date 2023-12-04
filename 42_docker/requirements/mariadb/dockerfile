@@ -17,7 +17,7 @@ ENV MARIADB_ROOT_PASSWORD jesuisleroot
 
 COPY ./50-server.cnf /etc/mysql/mariadb.conf.d
 COPY mariadb_script.sh /
-COPY example.sql /usr/local/bin/wordpress.sql
+COPY wordpress_data.sql /usr/local/bin/wordpress_data.sql
 
 EXPOSE 3306
 
