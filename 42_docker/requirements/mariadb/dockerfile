@@ -6,18 +6,11 @@ RUN mkdir -p /var/run/mysqld && \
     chown -R mysql:mysql /var/run/mysqld && \
     chmod 777 /var/run/mysqld
 
-#env for testing
-ENV DOMAIN_NAME ayagmur.42.fr
-ENV MYSQL_HOSTNAME mariadb
-ENV MYSQL_DATABASE wordpress
-ENV MYSQL_USER jesuisleuser
-ENV MYSQL_PASSWORD jesuislemdp
-ENV MYSQL_ROOT_PASSWORD jesuisleroot
-ENV MARIADB_ROOT_PASSWORD jesuisleroot
-
 COPY ./50-server.cnf /etc/mysql/mariadb.conf.d
 COPY mariadb_script.sh /
 COPY wordpress_data.sql /usr/local/bin/wordpress_data.sql
+
+RUN chmod +x mariadb_script.sh
 
 EXPOSE 3306
 
