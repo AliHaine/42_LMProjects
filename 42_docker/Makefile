@@ -1,8 +1,8 @@
 up:
-	@docker compose up -d --build
+	@docker-compose -f ./srcs/docker-compose.yml up -d --build
 
 down:
-	@docker compose down
+	@docker-compose -f ./srcs/docker-compose.yml down
 
 clear:
-	@docker compose rm -f -s
+	@docker-compose -f ./srcs/docker-compose.yml rm -f -s
