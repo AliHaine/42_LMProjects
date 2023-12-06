@@ -6,7 +6,7 @@ RUN mkdir -p /var/run/mysqld && \
     chown -R mysql:mysql /var/run/mysqld && \
     chmod 777 /var/run/mysqld
 
-COPY ./50-server.cnf /etc/mysql/mariadb.conf.d
+COPY 50-server.cnf /etc/mysql/mariadb.conf.d
 COPY mariadb_script.sh /
 COPY wordpress_data.sql /usr/local/bin/wordpress_data.sql
 

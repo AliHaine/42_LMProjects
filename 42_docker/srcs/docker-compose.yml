@@ -3,7 +3,7 @@ version: '3.5'
 services:
   nginx:
     container_name: nginx
-    build: ./requirements/nginx
+    build: requirements/nginx
     depends_on:
       - wordpress
     restart: always
@@ -16,18 +16,18 @@ services:
 
   mariadb:
     container_name: mariadb
-    build: ./requirements/mariadb
+    build: requirements/mariadb
     volumes:
       - mariadb_v:/var/lib/mysql
     restart: always
     env_file:
-      - requirements/.env
+      - .env
     networks:
       - network
 
   wordpress:
     container_name: wordpress
-    build: ./requirements/wordpress
+    build: requirements/wordpress
     depends_on:
       - mariadb
     restart: always
@@ -36,20 +36,20 @@ services:
     networks:
       - network
     env_file:
-      - requirements/.env
+      - .env
 
 volumes:
   mariadb_v:
     driver: local
     driver_opts:
       type: none
-      device: ./data/mariadb
+      device: /home/ayagmur/data/mariadb
       o: bind
   wordpress_v:
     driver: local
     driver_opts:
       type: none
-      device: ./data/wordpress
+      device: /home/ayagmur/data/wordpress
       o: bind
 
 networks:
