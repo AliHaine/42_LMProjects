@@ -57,6 +57,41 @@ def depth_checker():
                 print("Flag -l don't provide number, set to 5")
                 break
 
+
+def clear_href(href_list):
+    for href in href_list:
+        if not href['href'].startswith("https://"):
+            href_list.remove(href)
+
+def get_images_path_from_soup(soup_target):
+    img_tags = soup_target.find_all('img')
+
+    return [img['src'] for img in img_tags]
+
+
+def get_soup_from_url(url_target):
+    url_response = None
+    try:
+        url_response = requests.get(url_target)
+    except requests.exceptions.RequestException as e:
+        print(f"Error occured with the URL provided {e}")
+        exit(1)
+    return BeautifulSoup(url_response.text, 'html.parser')
+
+
+def download_images_from_list(images_list):
+    for url in images_list:
+        filename = re.search(r'/([\w_-]+[.](jpg|jpeg|bmp|gif|png))$', url)
+        if not filename:
+            continue
+        print(f"Download {filename.group(1)}")
+        with open(filename.group(1), mode='wb') as f:
+            try:
+                response = requests.get(url)
+                f.write(response.content)
+            except requests.exceptions.RequestException as e:
+                print(f"Error occured with the image URL provided {e}")
+
 args_checker()
 depth_checker()
 print(f"Depth is {depth}")
@@ -66,32 +101,21 @@ print(f"Url provided: {url}")
 
 directory_setup()
 
-url_response = None
-try:
-    url_response = requests.get(url)
-except requests.exceptions.RequestException as e:
-    print(f"Error occured with the URL provided {e}")
-    exit(1)
-soup = BeautifulSoup(url_response.text, 'html.parser')
-img_tags = soup.find_all('img')
-href_tags = soup.find_all('a', href=True)
+default_soup = get_soup_from_url(url)
+href_tags = default_soup.find_all('a', href=True)
+clear_href(href_tags)
 if depth == -1:
     depth = len(href_tags)
 elif len(href_tags) < depth:
     depth = len(href_tags)
     print(f"New depth {depth} because the provided website don't have enough depth.")
 
-urls = [img['src'] for img in img_tags]
-
-for url in urls:
-    filename = re.search(r'/([\w_-]+[.](jpg|jpeg|bmp|gif|png))$', url)
-    if not filename:
-        continue
-    print(f"Download {filename.group(1)}")
-    with open(filename.group(1), mode='wb') as f:
-        response = requests.get(url)
-        f.write(response.content)
-
+images_url = get_images_path_from_soup(default_soup)
+download_images_from_list(images_url)
 
 for i in range(depth):
-    print("")
+    url = href_tags[i]['href']
+    print(f"try to download from the depth {url}")
+    soup = get_soup_from_url(url)
+    images_url = get_images_path_from_soup(soup)
+    download_images_from_list(images_url)
