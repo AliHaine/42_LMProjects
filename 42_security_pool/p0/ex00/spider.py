@@ -49,6 +49,8 @@ except requests.exceptions.RequestException as e:
     exit(1)
 soup = BeautifulSoup(url_response.text, 'html.parser')
 img_tags = soup.find_all('img')
+href_tags = soup.find_all('href')
+
 
 urls = [img['src'] for img in img_tags]
 
