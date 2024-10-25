@@ -6,6 +6,7 @@ import shutil
 from bs4 import BeautifulSoup
 
 args = sys.argv
+depth = 0
 
 
 def args_checker():
@@ -34,7 +35,31 @@ def directory_setup():
     os.chdir(directory)
 
 
+def depth_checker():
+    global depth
+    for index, arg in enumerate(args):
+        if arg == "-r":
+            depth = -1
+            try:
+                if args[index + 1] == "-l":
+                    depth = 5
+            except IndexError:
+                print("Flag -r don't follow with -l")
+                break
+
+            try:
+                if args[index + 2]:
+                    if not args[index + 2].isnumeric():
+                        print(f"Value {args[index + 2]} is not a integer")
+                        break
+                    depth = int(args[index + 2])
+            except IndexError:
+                print("Flag -l don't provide number, set to 5")
+                break
+
 args_checker()
+depth_checker()
+print(f"Depth is {depth}")
 
 url = args.pop()
 print(f"Url provided: {url}")
@@ -49,8 +74,12 @@ except requests.exceptions.RequestException as e:
     exit(1)
 soup = BeautifulSoup(url_response.text, 'html.parser')
 img_tags = soup.find_all('img')
-href_tags = soup.find_all('href')
-
+href_tags = soup.find_all('a', href=True)
+if depth == -1:
+    depth = len(href_tags)
+elif len(href_tags) < depth:
+    depth = len(href_tags)
+    print(f"New depth {depth} because the provided website don't have enough depth.")
 
 urls = [img['src'] for img in img_tags]
 
@@ -62,3 +91,7 @@ for url in urls:
     with open(filename.group(1), mode='wb') as f:
         response = requests.get(url)
         f.write(response.content)
+
+
+for i in range(depth):
+    print("")
