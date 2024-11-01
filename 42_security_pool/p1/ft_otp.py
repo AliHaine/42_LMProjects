@@ -40,7 +40,7 @@ def get_counter():
             return int(value)
     except FileNotFoundError:
         with open('counter.txt', 'w') as f:
-            f.write('0')
+            f.write('1')
         return 0
     except ValueError:
         print("Unexptected error from counter file")
