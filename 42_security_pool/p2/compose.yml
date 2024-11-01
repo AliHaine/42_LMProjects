@@ -4,12 +4,12 @@ services:
     volumes:
       - ./index.html:/usr/share/nginx/html/index.html
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    image: nginx
+    build: ./nginx
     networks:
       - tor_network
   tor:
     container_name: tor
-    build: .
+    build: ./tor
     networks:
       - tor_network
 
