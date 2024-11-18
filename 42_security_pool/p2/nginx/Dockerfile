@@ -5,8 +5,6 @@ RUN apt-get update && \
 
 RUN echo "root:mdp" | chpasswd
 
-EXPOSE 4242
-
 COPY ./sshd_config 	/etc/ssh
 
 CMD service ssh start && nginx -g 'daemon off;'
