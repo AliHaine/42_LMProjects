@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 void no()
 {
@@ -13,67 +14,53 @@ void ok()
     puts("Good job.");
 }
 
-int main(int32_t argc, char** argv)
+//pass = 0010110897w98*101114101
+int main()
 {
-    int32_t var_c = 0;
+    uint uVar1;
+    size_t sVar2;
+    bool while_exit;
+    char while_str[4];
+    char local_39[24];
+    char str_9[9];
+    int scanf_ret;
+    int atoi_ret;
+
     printf("Please enter key: ");
-    char var_39;
-
-    if (1 != __isoc99_scanf("%23s", &var_39))
+    scanf_ret = scanf("%s", local_39);
+    if (scanf_ret != 1)
         no();
-
-    char var_38;
-
-    if (0x30 != var_38)
+    if (local_39[1] != '0')
         no();
-
-    if (0x30 != var_39)
+    if (local_39[0] != '0')
         no();
-
-    fflush(*stdin);
-    char var_21[9];
-    memset(&var_21, 0, 9);
-    var_21 = 0x64;
-    char var_3a = 0;
-    int32_t var_18 = 2;
-    int32_t var_14 = 1;
-
-    while (true)
-    {
-        char var_45_1 = 0;
-        int32_t eax_3;
-
-        if (strlen(var_21) < 8)
-        {
-            eax_3 = var_18 < strlen(&var_39);
-            var_45_1 = eax_3;
+    fflush(stdin);
+    memset(str_9, 0,9);
+    str_9[0] = 'd';
+    while_str[3] = 0;
+    int i = 2;
+    int j = 1;
+    while(true) {
+        sVar2 = strlen(str_9);
+        uVar1 = i;
+        while_exit = false;
+        if (sVar2 < 8) {
+            sVar2 = strlen(local_39);
+            while_exit = uVar1 < sVar2;
         }
-
-        eax_3 = var_45_1;
-
-        if ((eax_3 & 1) == 0)
-            break;
-
-        int32_t eax_6;
-        eax_6 = &var_39[var_18];
-        char nptr = eax_6;
-        int32_t eax_7;
-        eax_7 = &var_38[var_18];
-        char var_3c_1 = eax_7;
-        void var_37;
-        int32_t eax_8;
-        eax_8 = *(&var_37 + var_18);
-        char var_3b_1 = eax_8;
-        &var_21[var_14] = atoi(&nptr);
-        var_18 += 3;
-        var_14 += 1;
+        if (!while_exit) break;
+        while_str[0] = local_39[i];
+        while_str[1] = local_39[i + 1];
+        while_str[2] = local_39[i + 2];
+        atoi_ret = atoi(while_str);
+        str_9[j] = (char)atoi_ret;
+        i += 3;
+        j += 1;
     }
-
-    &var_21[var_14] = 0;
-
-    if (strcmp(&var_21, "delabere") != 0)
+    str_9[j] = '\0';
+    if (strcmp(str_9, "delabere") == 0)
+        ok();
+    else
         no();
-
-    ok();
     return 0;
 }
