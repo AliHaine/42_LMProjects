@@ -1,7 +1,7 @@
 services:
-  ftpd_server:
+  server:
     image: stilliard/pure-ftpd
-    container_name: pure-ftpd
+    container_name: server
     ports:
       - "1498:21"
       - "30000-30009:30000-30009"
@@ -9,9 +9,9 @@ services:
       - "./volumes:/home/username/"
       - "./volumes:/etc/pure-ftpd/passwd"
     environment:
-      PUBLICHOST: "ftpd_server"
-      FTP_USER_NAME: username
-      FTP_USER_PASS: mypass
+      PUBLICHOST: "server"
+      FTP_USER_NAME: user
+      FTP_USER_PASS: pass
       FTP_USER_HOME: /home/username
     restart: always
     networks:
