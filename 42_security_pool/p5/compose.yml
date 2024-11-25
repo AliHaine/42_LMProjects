@@ -6,7 +6,7 @@ services:
       - "1498:21"
       - "30000-30009:30000-30009"
     volumes:
-      - "./volumes/server/:/home/username/"
+      - "./v_inq/server/:/home/username/"
     environment:
       PUBLICHOST: "server"
       FTP_USER_NAME: user
@@ -24,7 +24,7 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - "./volumes/filezilla/:/config/"
+      - "./v_inq/filezilla/:/config/"
     ports:
       - 3000:3000
     restart: unless-stopped
@@ -36,7 +36,7 @@ services:
     container_name: python
     restart: unless-stopped
     volumes:
-      - "./volumes/python/:/hacked/"
+      - "./v_inq/python/:/hacked/"
     networks:
       - inq
 

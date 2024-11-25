@@ -9,6 +9,8 @@ build:
 
 down:
 	@docker compose down
+	@docker rmi p5-python
+
 
 INFO=$(shell echo $(shell docker inspect filezilla --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}') $(shell docker inspect filezilla --format='{{range .NetworkSettings.Networks}}{{.MacAddress}}{{end}}') $(shell docker inspect server --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}') $(shell docker inspect server --format='{{range .NetworkSettings.Networks}}{{.MacAddress}}{{end}}'))
 
