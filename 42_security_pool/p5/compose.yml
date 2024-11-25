@@ -6,8 +6,7 @@ services:
       - "1498:21"
       - "30000-30009:30000-30009"
     volumes:
-      - "./volumes:/home/username/"
-      - "./volumes:/etc/pure-ftpd/passwd"
+      - "./volumes/server/:/home/username/"
     environment:
       PUBLICHOST: "server"
       FTP_USER_NAME: user
@@ -25,7 +24,7 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - ./volumes:/config
+      - "./volumes/filezilla/:/config/"
     ports:
       - 3000:3000
     restart: unless-stopped
@@ -37,7 +36,7 @@ services:
     container_name: python
     restart: unless-stopped
     volumes:
-      - ./volumes:/hacked
+      - "./volumes/python/:/hacked/"
     networks:
       - inq
 

@@ -5,6 +5,7 @@ runall: build inquisitor
 build:
 	@echo " Starting environment.. "
 	@docker compose up -d
+	@docker exec -it server chmod -R 755 /home/username
 
 down:
 	@docker compose down

