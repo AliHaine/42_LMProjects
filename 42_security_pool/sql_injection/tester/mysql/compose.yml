@@ -1,0 +1,18 @@
+services:
+  mysql:
+    container_name: mysql
+    build: ./mysql
+    networks:
+      - net
+    expose:
+      - "8181"
+  php:
+    container_name: php
+    build: ./php
+    ports:
+      - "7979:80"
+    networks:
+      - net
+
+networks:
+  net:

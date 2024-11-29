@@ -1,8 +1,7 @@
 mysql:
-	docker build -t test-mysql tester/mysql
-	docker run -d --name mysql -p 3306:3306 -v ./data_mysql:/var/lib/mysql test-mysql
+	docker compose -f ./tester/mysql/compose.yml up -d
 
-
-down:
-	@docker stop mysql
-	@docker rm mysql
+dmysql:
+	docker compose -f ./tester/mysql/compose.yml down
+	@docker rmi mysql-mysql
+	@docker rmi mysql-php
