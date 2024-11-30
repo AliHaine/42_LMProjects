@@ -7,6 +7,12 @@
         $email = $_POST['email'];
     }
 
+    if ($fname == "admin")
+    {
+        echo "admin username is forbidden";
+        exit;
+    }
+
     // database details
     $host = "mysql";
     $username = "root";
@@ -21,9 +27,10 @@
     {
         die("Connection failed!" . mysqli_connect_error());
     }
-
     // using sql to create a data entry query
     $sql = "INSERT INTO contactform_entries (id, fname, lname, email) VALUES ('0', '$fname', '$lname', '$email')";
+
+    echo $sql;
 
     // send query to the database to add values and confirm if successful
     $rs = mysqli_query($con, $sql);

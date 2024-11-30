@@ -1,6 +1,7 @@
 FROM php:8.2-apache
 
 COPY ./mysqltester.php /var/www/html/
+COPY ./mysqlget.php /var/www/html/
 COPY ./index.html /var/www/html/
 
 RUN docker-php-ext-install mysqli

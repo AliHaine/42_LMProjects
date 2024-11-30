@@ -4,6 +4,9 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup as bs
 
+# ' OR '1'='1
+
+# admin', 'whatever', 'test@example.com') --
 
 if len(sys.argv) < 2:
     print("You need to provide at least 1 param")
