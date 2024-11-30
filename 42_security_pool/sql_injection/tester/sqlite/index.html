@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sqlite</title>
+</head>
+<body>
+    <h2>Register</h2>
+    <form action="mysqltester.php" method="post">
+        <label for="rusername">username</label><br>
+        <input type="text" id="rusername" name="rusername"><br>
+        <label for="rpassword">password</label><br>
+        <input type="text" id="rpassword" name="rpassword"><br>
+        <label for="remail">Email</label><br>
+        <input type="email" id="remail" name="remail"><br><br>
+        <input type="submit" name="post" value="post">
+    </form>
+
+    <h2>Getter</h2>
+    <form action="mysqlget.php" method="get">
+        <label for="gusername">username</label><br>
+        <input type="text" id="gusername" name="gusername"><br>
+        <label for="gpassword">password</label><br>
+        <input type="text" id="gpassword" name="gpassword"><br>
+        <input id="get" type="submit" name="get" value="get">
+    </form>
+
+</body>
+</html>

