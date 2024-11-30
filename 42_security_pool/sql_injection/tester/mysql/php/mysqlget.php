@@ -1,39 +1,31 @@
 <?php
-    // getting all values from the HTML form
     if(isset($_GET['get']))
     {
-        $fname = $_GET['1fname'];
-        $lname = $_GET['1lname'];
+        $form_username = $_GET['gusername'];
+        $form_password = $_GET['gpassword'];
     }
 
-    // database details
-    $host = "mysql";
-    $username = "root";
-    $password = "root";
-    $dbname = "testdb";
-
-    // creating a connection
-    $con = mysqli_connect($host, $username, $password, $dbname);
-
-    // to ensure that the connection is made
+    $con = mysqli_connect("mysql", "root", "root", "db");
     if (!$con)
-    {
         die("Connection failed!" . mysqli_connect_error());
+
+    $pass_sql = "SELECT * FROM users WHERE (username='$form_username') AND (password='$form_password')";
+    echo $pass_sql . "<br>";
+
+    if (mysqli_multi_query($con, $pass_sql)) {
+        do {
+            if ($result = mysqli_store_result($con)) {
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        foreach ($row as &$v)
+                            echo $v . "<br>";
+                    }
+                }
+                mysqli_free_result($result);
+            }
+        } while (mysqli_next_result($con));
+    } else {
+        echo "Query failed: " . mysqli_error($con);
     }
-
-    $pass_sql = "SELECT email FROM contactform_entries WHERE (fname='$fname') AND (lname='$lname')";
-
-    // send query to the database to add values and confirm if successful
-    $pass_res = mysqli_query($con, $pass_sql);
-    if($pass_res && mysqli_num_rows($pass_res) > 0)
-    {
-        while ($row = mysqli_fetch_assoc($pass_res)) {
-            echo $row['email'] . "<br>";
-        }
-    } else
-        echo "Wrong password";
-
-    // close connection
     mysqli_close($con);
-
 ?>

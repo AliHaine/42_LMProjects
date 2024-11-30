@@ -1,45 +1,25 @@
 <?php
-    // getting all values from the HTML form
     if(isset($_POST['submit']))
     {
-        $fname = $_POST['fname'];
-        $lname = $_POST['lname'];
-        $email = $_POST['email'];
+        $form_username = $_POST['rusername'];
+        $form_password = $_POST['rpassword'];
+        $form_email = $_POST['remail'];
     }
 
-    if ($fname == "admin")
+    if ($form_username == "admin")
     {
         echo "admin username is forbidden";
         exit;
     }
 
-    // database details
-    $host = "mysql";
-    $username = "root";
-    $password = "root";
-    $dbname = "testdb";
-
-    // creating a connection
-    $con = mysqli_connect($host, $username, $password, $dbname);
-
-    // to ensure that the connection is made
+    $con = mysqli_connect("mysql", "root", "root", "db");
     if (!$con)
-    {
         die("Connection failed!" . mysqli_connect_error());
-    }
-    // using sql to create a data entry query
-    $sql = "INSERT INTO contactform_entries (id, fname, lname, email) VALUES ('0', '$fname', '$lname', '$email')";
 
-    echo $sql;
+    $sql = "INSERT INTO users (id, username, password, email) VALUES ('0', '$form_username', '$form_password', '$form_email')";
+    echo $sql . "<br>";
 
-    // send query to the database to add values and confirm if successful
-    $rs = mysqli_query($con, $sql);
-    if($rs)
-    {
+    if(mysqli_query($con, $sql))
         echo "Entries added!";
-    }
-
-    // close connection
     mysqli_close($con);
-
 ?>

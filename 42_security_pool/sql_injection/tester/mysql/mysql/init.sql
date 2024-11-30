@@ -1,10 +1,10 @@
-CREATE DATABASE IF NOT EXISTS testdb;
+CREATE DATABASE IF NOT EXISTS db;
 
-USE testdb;
+USE db;
 
-CREATE TABLE IF NOT EXISTS contactform_entries (
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    fname VARCHAR(255),
-    lname VARCHAR(255),
+    username VARCHAR(255),
+    password VARCHAR(255),
     email VARCHAR(255)
 );
