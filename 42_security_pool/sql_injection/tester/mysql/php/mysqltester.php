@@ -1,5 +1,5 @@
 <?php
-    if(isset($_POST['submit']))
+    if(isset($_POST['post']))
     {
         $form_username = $_POST['rusername'];
         $form_password = $_POST['rpassword'];
