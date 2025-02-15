@@ -82,8 +82,8 @@ def is_vulnerable(response):
     }
     for error in errors:
         if error in response.content.decode().lower():
-            if error == "sqlite3::query():":
-                base_type = "sqlite3"
+            if error == "sqlite3":
+                base_type = "sqlite"
             return True
     return False
 
@@ -110,6 +110,8 @@ def scan_sql_injection(url):
                 res = s.get(url, params=data)
             if is_vulnerable(res):
                 print(f"Injection vulnerability detected for: {url}. Form: \n{form_details}")
+
+                print(f"Base type: {base_type}")
                 try:
                     with open(storage_file, "w") as f:
                         if base_type == "mysql":
