@@ -1,4 +1,14 @@
 package com.alihaine.avaj.weather;
 
-public class WeatherTower {
+import com.alihaine.avaj.aircraft.Coordinates;
+
+public class WeatherTower extends Tower {
+
+    public String getWeather(Coordinates p_coordinates) {
+        return WeatherProvider.getInstance().getCurrentWeather(p_coordinates);
+    }
+
+    void changeWeather() {
+        this.conditionChanged();
+    }
 }

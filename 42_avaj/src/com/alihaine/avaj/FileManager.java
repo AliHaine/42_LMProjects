@@ -1,23 +1,51 @@
 package com.alihaine.avaj;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class FileManager {
 
-    private File scenario;
-    private File simulation;
+    private Scanner scenario;
+    private FileWriter simulation;
 
     public FileManager(String scenarioFileName) {
         try {
-            scenario = new File(scenarioFileName);
-            if (!scenario.exists() || !scenario.canRead() || scenario.isDirectory())
-                throw new CustomExceptions("File exception");
-        } catch (CustomExceptions e) {
+            File file = new File(scenarioFileName);
+            if (!file.exists() || !file.canRead() || file.isDirectory())
+                throw new CustomExceptions("File exception with custom exceptions sys.");
+            this.scenario = new Scanner(file);
+            this.simulation = new FileWriter("simulation.txt");
+        } catch (CustomExceptions | IOException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
-    private void scenarioFileSetup() {
+    public boolean scenarioHasNextLine() {
+        return this.scenario.hasNextLine();
+    }
 
+    public String getScenarioNextLine() {
+        String line = this.scenario.nextLine();
+        System.out.println(line);
+        return line;
+    }
+
+    public void writeSimulationLine(String line) {
+        try {
+            this.simulation.write(line);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void closeFiles() {
+        this.scenario.close();
+        try {
+            this.simulation.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

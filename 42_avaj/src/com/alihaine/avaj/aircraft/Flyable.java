@@ -2,10 +2,11 @@ package com.alihaine.avaj.aircraft;
 
 import com.alihaine.avaj.weather.WeatherTower;
 
-public interface Flyable {
+public abstract class Flyable {
 
+    protected WeatherTower weatherTower;
     public abstract void updateConditions();
-    default void registerTower(WeatherTower p_tower) {
-
+    public void registerTower(WeatherTower p_tower) {
+        this.weatherTower = p_tower;
     }
 }

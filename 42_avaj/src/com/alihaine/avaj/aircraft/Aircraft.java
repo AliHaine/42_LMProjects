@@ -1,7 +1,10 @@
 package com.alihaine.avaj.aircraft;
 
-public class Aircraft {
+import com.alihaine.avaj.weather.WeatherTower;
 
+public class Aircraft extends Flyable {
+
+    protected WeatherTower weatherTower;
     protected long id;
     protected String name;
     protected Coordinates coordinates;
@@ -10,5 +13,10 @@ public class Aircraft {
         this.id = p_id;
         this.name = p_name;
         this.coordinates = p_coordinates;
+    }
+
+    @Override
+    public void updateConditions() {
+
     }
 }
