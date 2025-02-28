@@ -29,7 +29,5 @@ public class JetPlane extends Aircraft {
         }
         this.coordinates = new Coordinates(this.coordinates.getLongitude(), Latitude, height);
         this.printMsgFromWeather(currentWeather);
-        if (height <= 0)
-            this.weatherTower.unregister(this);
     }
 }

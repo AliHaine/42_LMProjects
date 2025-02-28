@@ -1,5 +1,6 @@
 package com.alihaine.avaj.weather;
 
+import com.alihaine.avaj.Avaj;
 import com.alihaine.avaj.aircraft.Aircraft;
 import com.alihaine.avaj.aircraft.Flyable;
 
@@ -12,18 +13,26 @@ public class Tower {
 
     public void register(Flyable p_flyable) {
         Aircraft aircraft = (Aircraft) p_flyable;
-        System.out.println("Tower says: " + aircraft.getName() + "("+ aircraft.getId() + ")" +  " registered to weather tower.");
+        Avaj.fileManager.writeSimulationLine("Tower says: " + aircraft.getName() + "("+ aircraft.getId() + ")" +  " registered to weather tower.");
         this.observers.add(p_flyable);
     }
 
     public void unregister(Flyable p_flyable) {
         Aircraft aircraft = (Aircraft) p_flyable;
-        System.out.println("Tower says: " + aircraft.getName() + "("+ aircraft.getId() + ")" +  " unregistered from weather tower.");
+        Avaj.fileManager.writeSimulationLine("Tower says: " + aircraft.getName() + "("+ aircraft.getId() + ")" +  " unregistered from weather tower.");
         this.observers.remove(p_flyable);
     }
 
     protected void conditionChanged() {
-        for (Flyable observers : observers)
+        List<Aircraft> toUnregister = new ArrayList<>();
+        for (Flyable observers : observers) {
             observers.updateConditions();
+            Aircraft aircraft = (Aircraft) observers;
+            if (aircraft.getCoordinates().getHeight() <= 0)
+                toUnregister.add(aircraft);
+        }
+
+        for (Aircraft aircraft : toUnregister)
+            this.unregister(aircraft);
     }
 }

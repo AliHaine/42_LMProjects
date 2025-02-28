@@ -19,6 +19,7 @@ public class FileManager {
             this.simulation = new FileWriter("simulation.txt");
         } catch (CustomExceptions | IOException e) {
             System.out.println("Error: " + e.getMessage());
+            System.exit(2);
         }
     }
 
@@ -27,14 +28,12 @@ public class FileManager {
     }
 
     public String getScenarioNextLine() {
-        String line = this.scenario.nextLine();
-        System.out.println(line);
-        return line;
+        return this.scenario.nextLine();
     }
 
     public void writeSimulationLine(String line) {
         try {
-            this.simulation.write(line);
+            this.simulation.write(line + '\n');
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

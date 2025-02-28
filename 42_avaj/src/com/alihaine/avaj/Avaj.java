@@ -10,7 +10,11 @@ public class Avaj {
             return;
         }
         fileManager = new FileManager(argv[0]);
-        new Simulation();
+        try {
+            new Simulation();
+        } catch (CustomExceptions e) {
+            System.out.println(e);
+        }
         fileManager.closeFiles();
     }
 }

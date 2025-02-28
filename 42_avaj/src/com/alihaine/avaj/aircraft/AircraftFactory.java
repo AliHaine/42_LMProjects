@@ -1,5 +1,6 @@
 package com.alihaine.avaj.aircraft;
 
+import com.alihaine.avaj.aircraft.aircrafts.Baloon;
 import com.alihaine.avaj.aircraft.aircrafts.Helicopter;
 import com.alihaine.avaj.aircraft.aircrafts.JetPlane;
 
@@ -18,7 +19,7 @@ public class AircraftFactory {
         else if (p_type.equals("JetPlane"))
             return new JetPlane(this.currentId++, p_name, p_coordinates);
         else if (p_type.equals("Baloon"))
-            return new JetPlane(this.currentId++, p_name, p_coordinates);
+            return new Baloon(this.currentId++, p_name, p_coordinates);
         return null;
     }
 }

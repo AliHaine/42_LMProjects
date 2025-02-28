@@ -31,7 +31,5 @@ public class Helicopter extends Aircraft  {
         }
         this.coordinates = new Coordinates(longitude, this.coordinates.getLatitude(), height);
         this.printMsgFromWeather(currentWeather);
-        if (height <= 0)
-            this.weatherTower.unregister(this);
     }
 }

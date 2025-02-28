@@ -1,5 +1,7 @@
 package com.alihaine.avaj.aircraft;
 
+import com.alihaine.avaj.Avaj;
+
 public class Aircraft extends Flyable {
 
     protected long id;
@@ -25,14 +27,22 @@ public class Aircraft extends Flyable {
         return this.name;
     }
 
+    public Coordinates getCoordinates() {
+        return this.coordinates;
+    }
+
+    protected String getPrefix() {
+        return this.getClass().getSimpleName() + "#" + this.getName() + "(" + this.getId() + ")";
+    }
+
     protected void printMsgFromWeather(String weather) {
         if (weather.equals("SUN"))
-            System.out.println(this.getName() + "(" + this.getId() + "):" + "  Let's enjoy the good weather and take some pics.");
+            Avaj.fileManager.writeSimulationLine(this.getPrefix() + ": Let's enjoy the good weather and take some pics.");
         else if (weather.equals("RAIN"))
-            System.out.println(this.getName() + "(" + this.getId() + "):" + " It's raining. Better watch out for lightings.");
+            Avaj.fileManager.writeSimulationLine(this.getPrefix() + ": It's raining. Better watch out for lightings.");
         else if (weather.equals("FOG"))
-            System.out.println(this.getName() + "(" + this.getId() + "):" + "  NICE! FOGGING!");
+            Avaj.fileManager.writeSimulationLine(this.getPrefix() + ": NICE! FOGGING!");
         else
-            System.out.println(this.getName() + "(" + this.getId() + "):" + "  OMG! Winter is coming!");
+            Avaj.fileManager.writeSimulationLine(this.getPrefix() + ": OMG! Winter is coming!");
     }
 }
