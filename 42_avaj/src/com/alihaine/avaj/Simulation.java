@@ -7,11 +7,10 @@ import com.alihaine.avaj.weather.WeatherTower;
 
 public class Simulation {
 
-    private int loop;
-
     public Simulation() {
+        int loop;
         try {
-            this.loop = Integer.parseInt(Avaj.fileManager.getScenarioNextLine());
+            loop = Integer.parseInt(Avaj.fileManager.getScenarioNextLine());
         } catch (NumberFormatException e) {
             System.out.println(e);
             return;

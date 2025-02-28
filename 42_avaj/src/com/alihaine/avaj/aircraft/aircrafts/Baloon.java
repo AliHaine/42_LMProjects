@@ -5,16 +5,13 @@ import com.alihaine.avaj.aircraft.Coordinates;
 
 import java.util.Map;
 
-public class Helicopter extends Aircraft  {
-
-    public Helicopter(long p_id, String p_name, Coordinates p_coordinates) {
-        super(p_id, p_name, p_coordinates);
-    }
+public class Baloon extends Aircraft {
+    public Baloon(long p_id, String p_name, Coordinates p_coordinates) { super(p_id, p_name, p_coordinates); }
     private final Map<String, Map<String, Integer>> conditions = Map.of(
-            "SUN", Map.of("Longitude", 10, "Height", 2),
-            "RAIN", Map.of("Longitude", 5),
-            "FOG", Map.of("Longitude", 1),
-            "SNOW", Map.of("Height", -12)
+            "SUN", Map.of("Longitude", 2, "Height", 4),
+            "RAIN", Map.of("Height", -5),
+            "FOG", Map.of("Height", -3),
+            "SNOW", Map.of("Height", -15)
     );
 
     @Override
@@ -22,13 +19,9 @@ public class Helicopter extends Aircraft  {
         String currentWeather = this.weatherTower.getWeather(this.coordinates);
         int height = this.coordinates.getHeight();
         int longitude = this.coordinates.getLongitude();
-        if (currentWeather.equals("SNOW")){
-            height += this.conditions.get("SNOW").get("Height");
-        } else {
-            longitude += this.conditions.get(currentWeather).get("Longitude");
-            if (currentWeather.equals("SUN"))
-                height += this.conditions.get("SUN").get("Height");
-        }
+        if (currentWeather.equals("SUN"))
+            longitude += this.conditions.get("SUN").get("Longitude");
+        height += this.conditions.get(currentWeather).get("Height");
         this.coordinates = new Coordinates(longitude, this.coordinates.getLatitude(), height);
         this.printMsgFromWeather(currentWeather);
         if (height <= 0)
