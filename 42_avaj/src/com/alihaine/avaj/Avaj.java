@@ -6,7 +6,7 @@ public class Avaj {
 
     public static void main(String[] argv) {
         if (argv.length != 1) {
-            System.out.println("No arguments given");
+            System.out.println("Error with args");
             return;
         }
         fileManager = new FileManager(argv[0]);

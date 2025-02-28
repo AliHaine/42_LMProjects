@@ -52,11 +52,4 @@ public class Simulation {
         }
         return true;
     }
-
-    private boolean isNumber(String str) {
-        for (char ch : str.toCharArray())
-            if (!Character.isDigit(ch))
-                return false;
-        return true;
-    }
 }

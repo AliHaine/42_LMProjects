@@ -15,9 +15,7 @@ public class Aircraft extends Flyable {
     }
 
     @Override
-    public void updateConditions() {
-
-    }
+    public void updateConditions() {}
 
     public long getId() {
         return this.id;
