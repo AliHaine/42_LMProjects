@@ -16,6 +16,8 @@ public class FileManager {
             if (!file.exists() || !file.canRead() || file.isDirectory())
                 throw new CustomExceptions("File exception with custom exceptions sys.");
             this.scenario = new Scanner(file);
+            if (!this.scenario.hasNextLine())
+                throw new CustomExceptions("File exception with custom exceptions file is empty");
             this.simulation = new FileWriter("simulation.txt");
         } catch (CustomExceptions | IOException e) {
             System.out.println("Error: " + e.getMessage());
