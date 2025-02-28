@@ -20,5 +20,18 @@ public class Helicopter extends Aircraft  {
     @Override
     public void updateConditions() {
         String currentWeather = this.weatherTower.getWeather(this.coordinates);
+        int height = this.coordinates.getHeight();
+        int longitude = this.coordinates.getLongitude();
+        if (currentWeather.equals("SNOW")){
+            height += this.conditions.get("SNOW").get("Height");
+        } else {
+            longitude += this.conditions.get(currentWeather).get("Longitude");
+            if (currentWeather.equals("SUN"))
+                height += this.conditions.get("SUN").get("Height");
+        }
+        this.coordinates = new Coordinates(longitude, this.coordinates.getLatitude(), height);
+        this.printMsgFromWeather(currentWeather);
+        if (height <= 0)
+            this.weatherTower.unregister(this);
     }
 }

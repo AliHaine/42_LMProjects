@@ -1,10 +1,7 @@
 package com.alihaine.avaj.aircraft;
 
-import com.alihaine.avaj.weather.WeatherTower;
-
 public class Aircraft extends Flyable {
 
-    protected WeatherTower weatherTower;
     protected long id;
     protected String name;
     protected Coordinates coordinates;
@@ -18,5 +15,24 @@ public class Aircraft extends Flyable {
     @Override
     public void updateConditions() {
 
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    protected void printMsgFromWeather(String weather) {
+        if (weather.equals("SUN"))
+            System.out.println(this.getName() + "(" + this.getId() + "):" + "  Let's enjoy the good weather and take some pics.");
+        else if (weather.equals("RAIN"))
+            System.out.println(this.getName() + "(" + this.getId() + "):" + " It's raining. Better watch out for lightings.");
+        else if (weather.equals("FOG"))
+            System.out.println(this.getName() + "(" + this.getId() + "):" + "  NICE! FOGGING!");
+        else
+            System.out.println(this.getName() + "(" + this.getId() + "):" + "  OMG! Winter is coming!");
     }
 }
