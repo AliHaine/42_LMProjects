@@ -1,0 +1,9 @@
+{
+  "name": "Scamft1",
+  "description": "Scamft image number #1",
+  "image": "ipfs://QmXehNWpK3ZptvLBYMZaeSs6WafGj1A7yD24NBg1fWKQHH",
+  "attributes": [
+    { "trait_type": "Type", "value": "Modern" },
+    { "trait_type": "Rarity", "value": "Normal" }
+  ]
+}
