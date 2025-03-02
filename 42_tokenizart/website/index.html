@@ -8,17 +8,40 @@
     <script src="main.js"></script>
 </head>
 <body>
-    <h1>Welcome to Scamft mint formular</h1>
+    <h1>Welcome to Scamft formular</h1>
     <div id="main">
         <form>
             <h1>Mint</h1>
-
-            <label>wallet address</label>
-            <input>
-            <label>uri</label>
-            <input>
+            <label>Wallet address</label>
+            <input id="address" type="text">
+            <label>Uri address</label>
+            <input id="uri" type="text">
             <button onclick="mintCall()">Mint</button>
         </form>
+        <form>
+            <h1>Mint-inchain</h1>
+            <label>Wallet address</label>
+            <input id="address-inchain" type="text">
+            <label>Data file</label>
+            <input id="file" type="file">
+            <button onclick="mintCallInchain()">Mint</button>
+        </form>
+        <form>
+            <h1>View owner</h1>
+            <label>Token to view</label>
+            <input id="view-target-token" type="number">
+            <button onclick="viewCall(event)">View</button>
+        </form>
+
+        <form>
+            <h1>View IPFS</h1>
+            <label>IPFS to view</label>
+            <input id="view-target-ipfs">
+            <button onclick="viewIpfsCall(event)">View</button>
+        </form>
+    </div>
+    <div id="msg">
+        <div id="out"></div>
     </div>
 </body>
 </html>
