@@ -23,13 +23,28 @@ const ABI = [
         "outputs": [
             { "type": "address", "name": "" }
         ]
+    },
+    {
+        "type": "function",
+        "name": "tokenURI",
+        "stateMutability": "view",
+        "inputs": [
+            { "type": "uint256", "name": "tokenId" }
+        ],
+        "outputs": [
+            { "type": "string", "name": "" }
+        ]
     }
     ]
 
 main();
 
 async function main() {
-    await provider.send("eth_requestAccounts", []);
+    try {
+        await provider.send("eth_requestAccounts", []);
+    } catch (error) {
+        console.log(error);
+    }
     signer = provider.getSigner();
     contract = new ethers.Contract(contractAddress, ABI, signer);
 }
@@ -42,9 +57,8 @@ async function mintCall() {
     if (!address || !uri)
         return;
     try {
-        const result = await contract.mintScamft(address, uri);
-        console.log(result);
-        document.getElementById("out").textContent = result;
+        await contract.mintScamft(address, uri)
+        document.getElementById("out").textContent = "Your NFT is under mining";
     } catch (e) {
         document.getElementById("out").textContent = "Error " + e.message;
     }
@@ -52,14 +66,21 @@ async function mintCall() {
 
 async function mintCallInchain() {
     event.preventDefault();
-    const address = document.getElementById("address").value;
-    const uri = document.getElementById("uri").value;
-    if (!address || !uri)
+    const address = document.getElementById("address-inchain").value;
+    const file = document.getElementById("file").files[0];
+    if (!address || !file || !document.getElementById("file").value.endsWith(".json"))
         return;
+
+    const toBase64 = file => new Promise(resolve => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve("base64://" + reader.result.replace("data:application/json;base64,", ""));
+        reader.onerror = () => console.log(error);
+    });
+    const result = await toBase64(file)
     try {
-        const result = await contract.mintScamft(address, uri);
-        console.log(result);
-        document.getElementById("out").textContent = result;
+        await contract.mintScamft(address, result);
+        document.getElementById("out").textContent = "Your NFT is under mining";
     } catch (e) {
         document.getElementById("out").textContent = "Error " + e.message;
     }
@@ -72,7 +93,6 @@ async function viewCall(event) {
         return;
     try {
         const owner = await contract.ownerOf(tokenId);
-        console.log(owner);
         document.getElementById("out").textContent = owner;
     } catch (e) {
         document.getElementById("out").textContent = "No owner found";
@@ -85,4 +105,18 @@ async function viewIpfsCall(event) {
     if (!ipfs)
         return;
     window.open("https://ipfs.io/ipfs/" + ipfs, '_blank').focus();
+}
+
+async function viewUriCall(event) {
+    event.preventDefault();
+    const tokenId = document.getElementById("view-target-uri").value;
+    if (!tokenId || tokenId < 0)
+        return;
+    try {
+        const owner = await contract.tokenURI(tokenId);
+        document.getElementById("out").textContent = owner;
+    } catch (e) {
+        document.getElementById("out").textContent = "No owner found";
+        console.log(e)
+    }
 }
