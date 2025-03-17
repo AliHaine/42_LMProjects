@@ -36,4 +36,8 @@ public class Hero {
         final int toSquare = this.level-1;
         return this.level * 1000 + (toSquare * toSquare) * 450;
     }
+
+    public int getLevel() {
+        return this.level;
+    }
 }

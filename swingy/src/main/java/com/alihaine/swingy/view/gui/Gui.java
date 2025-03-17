@@ -1,53 +1,49 @@
 package com.alihaine.swingy.view.gui;
 
-import javax.imageio.ImageIO;
+import com.alihaine.swingy.view.ViewMode;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
-public class Gui {
+public class Gui extends ViewMode {
 
-    public static void InitWin() {
-        JFrame frame = new JFrame();
-        frame.getContentPane().setBackground(Color.BLACK);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // adding button in JFrame
+    private final JFrame mainWindow = new JFrame();
+    private final JPanel mainPanel = new JPanel();
 
-        // 400 width and 500 height
-        frame.setSize(1400, 1600);
-
-        // using no layout managers
-        frame.setLayout(null);
-
-        // making the frame visible
-        frame.setVisible(true);
-
-        URL imageUrl = Gui.class.getResource("/a2.jpg");
-        if (imageUrl == null) {
-            System.out.println("Image not found");
-            return;
-        }
-
-        BufferedImage myPicture = null;
-        try {
-            myPicture = ImageIO.read(imageUrl);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        picLabel.setBounds(50, 50, myPicture.getWidth(), myPicture.getHeight());
-
-        frame.add(picLabel);
-        frame.revalidate();
-        frame.repaint();
+    public Gui() {
+        this.InitWin();
     }
 
-    public static void main(String[] args)
-    {
-        InitWin();
+    public void InitWin() {
+        this.mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //frame.setLocationRelativeTo(null);
+        mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        mainPanel.setLayout(null);
+        mainPanel.setBackground(Color.BLACK);
+
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        mainWindow.add(scrollPane);
+        mainWindow.setVisible(true);
+
+    }
+
+    public void DisplayImageToFrame(int x, int y, JLabel jLabel) {
+        jLabel.setBounds(x, y, 64, 64);
+        this.mainPanel.add(jLabel);
+        this.mainWindow.revalidate();
+        this.mainWindow.repaint();
+    }
+
+    @Override
+    public void DisplayMap(int mapSize) {
+        mainPanel.setPreferredSize(new Dimension(mapSize*64, mapSize*64)); // Larger than frame
+        for (int y = 0; y < mapSize; y++) {
+            for (int x = 0; x < mapSize; x++) {
+                this.DisplayImageToFrame(x * 64, y * 64, new JLabel(Images.images.getImageIconFromPath("/a2.jpg")));
+            }
+        }
     }
 }

@@ -1,4 +1,6 @@
 package com.alihaine.swingy.view;
 
-public class ViewMode {
+public abstract class ViewMode {
+
+    public abstract void DisplayMap(int mapSize);
 }

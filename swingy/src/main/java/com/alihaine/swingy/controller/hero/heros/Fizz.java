@@ -4,6 +4,6 @@ import com.alihaine.swingy.controller.hero.Hero;
 
 public class Fizz extends Hero {
     public Fizz(String name) {
-        super(name, "Fizz", 0, 0, 15, 15, 100);
+        super(name, "Fizz", 1, 0, 15, 15, 100);
     }
 }
