@@ -13,6 +13,7 @@ public class Hero {
     private int defense;
     private int hitPoint;
     private final JLabel image;
+    private int[] lastPos = new int[2];
 
     protected Hero(String name, String champ, JLabel image, int level, int experience, int attack, int defense, int hitPoint) {
         this.name = name;
@@ -95,5 +96,14 @@ public class Hero {
 
     public void setDefense(int defense) {
         this.defense = defense;
+    }
+
+    public void setLastPos(int x, int y) {
+        this.lastPos[0] = x;
+        this.lastPos[1] = y;
+    }
+
+    public int[] getLastPos() {
+        return this.lastPos;
     }
 }

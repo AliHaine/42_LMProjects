@@ -8,6 +8,7 @@ import com.alihaine.swingy.view.ViewMode;
 import com.alihaine.swingy.view.gui.Gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameLoop {
@@ -30,6 +31,7 @@ public class GameLoop {
         this.hero = new Fizz("MySuperFizz");
         this.viewMode.DisplayToPosition(this.map.getCurrentMapSize() * 64 / 2 - 32, this.map.getCurrentMapSize() * 64 / 2 - 32, this.hero.getImage());
         this.viewMode.DisplayPlayerInfos(this.hero);
+        this.CreateEnemies();
     }
 
     public void GenerateNewMap() {
@@ -77,11 +79,13 @@ public class GameLoop {
 
         if (this.hero.getHitPoint() > 0) {
             this.hero.addExperience(300 * currentEnemy.getLevel());
-            this.generateArtifact();
+            if (MathRand.getBoolRand())
+                this.generateArtifact();
+            else
+                this.stats = 0;
             currentEnemy.getImage().setVisible(false);
             this.enemiesHero.remove(currentEnemy);
             this.currentEnemy = null;
-            this.stats = 3;
         } else {
             this.stats = -1;
             this.hero.getImage().setVisible(false);
@@ -89,8 +93,10 @@ public class GameLoop {
     }
 
     public void TryToRun() {
-        if (MathRand.getBoolRand())
-            System.out.println("run");
+        if (MathRand.getBoolRand()) {
+            this.viewMode.DisplayToPosition(this.hero.getLastPos()[0], this.hero.getLastPos()[1], this.hero.getImage());
+            this.stats = 0;
+        }
         else
             this.LaunchFight();
     }
@@ -121,7 +127,7 @@ public class GameLoop {
             this.artifact = "Weapon " + this.currentEnemy.getLevel() * 3;
         else
             this.artifact = "Armor " + this.currentEnemy.getLevel() * 3;
-
+        this.stats = 3;
     }
 
     public void LeaveArtifact() {

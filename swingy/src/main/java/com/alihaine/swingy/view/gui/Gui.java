@@ -117,14 +117,23 @@ public class Gui extends ViewMode implements ActionListener {
         x = heroImage.getX();
         y = heroImage.getY();
         stats = GameLoop.gameLoop.stats;
-        if (e.getActionCommand().equals("Up") && stats == 0)
-            y -= 64;
-        else if (e.getActionCommand().equals("Down") && stats == 0)
-            y += 64;
-        else if (e.getActionCommand().equals("Right") && stats == 0)
-            x += 64;
-        else if (e.getActionCommand().equals("Left") && stats == 0)
-            x -= 64;
+        if (stats == 0) {
+            GameLoop.gameLoop.getCurrentHero().setLastPos(x, y);
+            if (e.getActionCommand().equals("Up"))
+                y -= 64;
+            else if (e.getActionCommand().equals("Down"))
+                y += 64;
+            else if (e.getActionCommand().equals("Right"))
+                x += 64;
+            else if (e.getActionCommand().equals("Left"))
+                x -= 64;
+            if (this.IsOutOfTheMap(x, y))
+                GameLoop.gameLoop.PlayerWinMap();
+            else {
+                this.DisplayToPosition(x, y, heroImage);
+                GameLoop.gameLoop.PlayerMoveTrigger();
+            }
+        }
         else if (e.getActionCommand().equals("Exit"))
             System.exit(0);
         else if (e.getActionCommand().equals("Keep") && stats == 3)
@@ -135,12 +144,5 @@ public class Gui extends ViewMode implements ActionListener {
             GameLoop.gameLoop.LaunchFight();
         else if (e.getActionCommand().equals("Run") && stats == 1)
             GameLoop.gameLoop.TryToRun();
-
-        if (this.IsOutOfTheMap(x, y))
-            GameLoop.gameLoop.PlayerWinMap();
-        else {
-            this.DisplayToPosition(x, y, heroImage);
-            GameLoop.gameLoop.PlayerMoveTrigger();
-        }
     }
 }
