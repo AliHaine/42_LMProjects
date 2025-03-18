@@ -7,6 +7,6 @@ import javax.swing.*;
 
 public class Fizz extends Hero {
     public Fizz(String name) {
-        super(name, "Fizz", new JLabel(Images.images.getImageIconFromPath("fizz")),1, 0, 15, 15, 100);
+        super(name, "Fizz", new JLabel(Images.images.getImageIconFromPath("fizz")),1, 0, 15, 3, 100);
     }
 }

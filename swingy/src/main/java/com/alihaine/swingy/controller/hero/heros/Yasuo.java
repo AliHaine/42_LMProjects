@@ -7,6 +7,6 @@ import javax.swing.*;
 
 public class Yasuo extends Hero {
     public Yasuo(String name) {
-        super(name, "Yasuo", new JLabel(Images.images.getImageIconFromPath("yasuo")),1, 0, 10, 10, 120);
+        super(name, "Yasuo", new JLabel(Images.images.getImageIconFromPath("yasuo")),1, 0, 10, 2, 120);
     }
 }

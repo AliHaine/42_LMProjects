@@ -7,6 +7,6 @@ import javax.swing.*;
 
 public class Boss extends Hero {
     public Boss(String name) {
-        super(name, "Boss", new JLabel(Images.images.getImageIconFromPath("boss")),1, 0, 5, 35, 150);
+        super(name, "Boss", new JLabel(Images.images.getImageIconFromPath("boss")),1, 0, 5, 5, 150);
     }
 }

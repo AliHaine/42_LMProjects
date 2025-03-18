@@ -1,16 +1,15 @@
 package com.alihaine.swingy.view.gui;
 
 import com.alihaine.swingy.controller.GameLoop;
-import com.alihaine.swingy.controller.Map;
 import com.alihaine.swingy.controller.hero.Hero;
 import com.alihaine.swingy.view.ViewMode;
+import org.omg.PortableInterceptor.LOCATION_FORWARD;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +26,6 @@ public class Gui extends ViewMode implements ActionListener {
 
     public void InitWin() {
         this.mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //frame.setLocationRelativeTo(null);
         mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainPanel.setLayout(null);
         mainPanel.setBackground(Color.BLACK);
@@ -47,25 +45,26 @@ public class Gui extends ViewMode implements ActionListener {
     }
 
     private void InitInputPanel() {
-        List<JButton> buttons = Arrays.asList(new JButton("Up"), new JButton("Down"), new JButton("Left"), new JButton("Right"));
+        List<JButton> buttons = Arrays.asList(new JButton("Up"), new JButton("Down"), new JButton("Left"), new JButton("Right"), new JButton("Keep"), new JButton("Leave"), new JButton("Fight"), new JButton("Run"), new JButton("Exit"));
 
         buttons.forEach(button -> {
             button.addActionListener(this);
             inputPanel.add(button);
         });
-        inputPanel.add(new JButton("test"));
         mainWindow.add(inputPanel, BorderLayout.SOUTH);
     }
 
     private void InitTextPanel() {
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.PAGE_AXIS));
-        JLabel textLabel = new JLabel();
-        textLabel.setForeground(Color.WHITE);
-        textPanel.add(textLabel);
-        //textPanel.add(new JLabel());
-        //textPanel.add(new JLabel());
+        JLabel textLabel1 = new JLabel();
+        textLabel1.setForeground(Color.WHITE);
+        JLabel textLabel2 = new JLabel();
+        textLabel2.setForeground(Color.WHITE);
+        textLabel1.setBorder(new LineBorder(Color.white, 1));
+        textLabel2.setBorder(new LineBorder(Color.white, 1));
+        textPanel.add(textLabel1);
+        textPanel.add(textLabel2);
         textPanel.setBackground(Color.darkGray);
-
         mainWindow.add(textPanel, BorderLayout.EAST);
     }
 
@@ -80,7 +79,7 @@ public class Gui extends ViewMode implements ActionListener {
 
     @Override
     public void DisplayMap(int mapSize) {
-        mainPanel.setPreferredSize(new Dimension(mapSize*64, mapSize*64)); // Larger than frame
+        mainPanel.setPreferredSize(new Dimension(mapSize*64, mapSize*64));
         for (int y = 0; y < mapSize; y++) {
             for (int x = 0; x < mapSize; x++) {
                 this.DisplayToPosition(x * 64, y * 64, new JLabel(Images.images.getImageIconFromPath("ground")));
@@ -102,27 +101,46 @@ public class Gui extends ViewMode implements ActionListener {
         return false;
     }
 
-    public void DisplayFight() {
-
+    public void DisplayFight(List<String> logs) {
+        StringBuilder logsToDisplay = new StringBuilder("<HTML>");
+        for (String line : logs)
+            logsToDisplay.append(line + "<BR>");
+        logsToDisplay.append("</HTML>");
+        JLabel label = (JLabel) textPanel.getComponent(1);
+        label.setText(logsToDisplay.toString());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int x, y;
+        int x, y, stats;
         JLabel heroImage = GameLoop.gameLoop.getCurrentHero().getImage();
         x = heroImage.getX();
         y = heroImage.getY();
-        if (e.getActionCommand().equals("Up"))
+        stats = GameLoop.gameLoop.stats;
+        if (e.getActionCommand().equals("Up") && stats == 0)
             y -= 64;
-        else if (e.getActionCommand().equals("Down"))
+        else if (e.getActionCommand().equals("Down") && stats == 0)
             y += 64;
-        else if (e.getActionCommand().equals("Right"))
+        else if (e.getActionCommand().equals("Right") && stats == 0)
             x += 64;
-        else if (e.getActionCommand().equals("Left"))
+        else if (e.getActionCommand().equals("Left") && stats == 0)
             x -= 64;
+        else if (e.getActionCommand().equals("Exit"))
+            System.exit(0);
+        else if (e.getActionCommand().equals("Keep") && stats == 3)
+            GameLoop.gameLoop.KeepArtifact();
+        else if (e.getActionCommand().equals("Leave") && stats == 3)
+            GameLoop.gameLoop.LeaveArtifact();
+        else if (e.getActionCommand().equals("Fight") && stats == 1)
+            GameLoop.gameLoop.LaunchFight();
+        else if (e.getActionCommand().equals("Run") && stats == 1)
+            GameLoop.gameLoop.TryToRun();
+
         if (this.IsOutOfTheMap(x, y))
             GameLoop.gameLoop.PlayerWinMap();
-        else
+        else {
             this.DisplayToPosition(x, y, heroImage);
+            GameLoop.gameLoop.PlayerMoveTrigger();
+        }
     }
 }

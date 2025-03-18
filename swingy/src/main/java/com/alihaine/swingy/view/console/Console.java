@@ -4,6 +4,7 @@ import com.alihaine.swingy.controller.hero.Hero;
 import com.alihaine.swingy.view.ViewMode;
 
 import javax.swing.text.View;
+import java.util.List;
 
 public class Console extends ViewMode {
     @Override
@@ -13,6 +14,11 @@ public class Console extends ViewMode {
 
     @Override
     public void DisplayPlayerInfos(Hero hero) {
+
+    }
+
+    @Override
+    public void DisplayFight(List<String> logs) {
 
     }
 

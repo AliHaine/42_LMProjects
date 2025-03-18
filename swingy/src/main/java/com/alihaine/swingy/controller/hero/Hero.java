@@ -77,16 +77,8 @@ public class Hero {
         return attack;
     }
 
-    public void setAttack(int attack) {
-        this.attack = attack;
-    }
-
     public int getDefense() {
         return defense;
-    }
-
-    public void setDefense(int defense) {
-        this.defense = defense;
     }
 
     public int getHitPoint() {
@@ -95,5 +87,13 @@ public class Hero {
 
     public void setHitPoint(int hitPoint) {
         this.hitPoint = hitPoint;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
     }
 }
