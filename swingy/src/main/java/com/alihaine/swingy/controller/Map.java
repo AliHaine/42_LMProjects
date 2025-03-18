@@ -1,7 +1,5 @@
 package com.alihaine.swingy.controller;
 
-import com.alihaine.swingy.controller.hero.Hero;
-
 public class Map {
 
     private int currentMapSize;

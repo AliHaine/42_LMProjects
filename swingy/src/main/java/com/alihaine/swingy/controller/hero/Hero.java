@@ -1,5 +1,7 @@
 package com.alihaine.swingy.controller.hero;
 
+import com.alihaine.swingy.controller.GameLoop;
+
 import javax.swing.*;
 
 public class Hero {
@@ -10,7 +12,7 @@ public class Hero {
     private int attack;
     private int defense;
     private int hitPoint;
-    private JLabel image;
+    private final JLabel image;
 
     protected Hero(String name, String champ, JLabel image, int level, int experience, int attack, int defense, int hitPoint) {
         this.name = name;
@@ -23,17 +25,16 @@ public class Hero {
         this.image = image;
     }
 
-    protected boolean IsLevelUp() {
+    public boolean IsLevelUp() {
         return this.experience >= this.LevelCalculator();
     }
 
-    protected void LevelUp() {
+    public void LevelUp() {
         this.level++;
         this.experience = 0;
         this.attack++;
         this.defense++;
         this.hitPoint = 100 + 10 * this.level;
-
     }
 
     private int LevelCalculator() {
@@ -47,5 +48,52 @@ public class Hero {
 
     public JLabel getImage() {
         return this.image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getChamp() {
+        return champ;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
+    public void addExperience(int experience) {
+        this.setExperience(this.getExperience() + experience);
+        if (this.IsLevelUp())
+            this.LevelUp();
+        GameLoop.gameLoop.getViewMode().DisplayPlayerInfos(this);
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public int getHitPoint() {
+        return hitPoint;
+    }
+
+    public void setHitPoint(int hitPoint) {
+        this.hitPoint = hitPoint;
     }
 }

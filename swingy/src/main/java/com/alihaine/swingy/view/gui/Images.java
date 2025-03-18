@@ -15,10 +15,10 @@ public class Images {
     public static final Images images = new Images();
 
     private Images() {
-        final List<String> imagesPath = Arrays.asList("ground", "fizz");
+        final List<String> imagesPath = Arrays.asList("ground", "fizz", "yasuo", "boss", "shaco");
 
         for (String imagePath : imagesPath) {
-            final ImageIcon imageIcon = this.LoadImage("/" + imagePath + ".jpg");
+            final ImageIcon imageIcon = this.LoadImage("/" + imagePath + ".png");
             if (imageIcon == null) {
                 System.out.println("Impossible to load the image " + imagePath);
                 System.exit(2);

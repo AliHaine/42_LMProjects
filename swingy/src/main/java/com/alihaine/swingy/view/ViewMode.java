@@ -1,5 +1,7 @@
 package com.alihaine.swingy.view;
 
+import com.alihaine.swingy.controller.hero.Hero;
+
 import javax.swing.*;
 
 public abstract class ViewMode {
@@ -12,4 +14,6 @@ public abstract class ViewMode {
         System.out.println("This mode of view can't call this function please fix your code");
     }
     public abstract void DisplayMap(int mapSize);
+    public abstract void DisplayPlayerInfos(Hero hero);
+    public abstract boolean IsOutOfTheMap(int x, int y);
 }
