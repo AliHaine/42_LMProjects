@@ -1,5 +1,7 @@
 package com.alihaine.swingy.controller.hero;
 
+import javax.swing.*;
+
 public class Hero {
     private final String name;
     private final String champ;
@@ -8,8 +10,9 @@ public class Hero {
     private int attack;
     private int defense;
     private int hitPoint;
+    private JLabel image;
 
-    protected Hero(String name, String champ, int level, int experience, int attack, int defense, int hitPoint) {
+    protected Hero(String name, String champ, JLabel image, int level, int experience, int attack, int defense, int hitPoint) {
         this.name = name;
         this.champ = champ;
         this.level = level;
@@ -17,6 +20,7 @@ public class Hero {
         this.attack = attack;
         this.defense = defense;
         this.hitPoint = hitPoint;
+        this.image = image;
     }
 
     protected boolean IsLevelUp() {
@@ -39,5 +43,9 @@ public class Hero {
 
     public int getLevel() {
         return this.level;
+    }
+
+    public JLabel getImage() {
+        return this.image;
     }
 }

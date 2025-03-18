@@ -2,20 +2,24 @@ package com.alihaine.swingy.controller;
 
 import com.alihaine.swingy.controller.hero.Hero;
 
-import java.util.LinkedList;
-
 public class Map {
 
-    private final LinkedList<String> map = new LinkedList<>();
+    private int currentMapSize;
 
-    public Map() {
-        final int mapSize = this.MapSizeCalculator();
-        GameLoop.gameLoop.getViewMode().DisplayMap(mapSize);
+    public Map(int playerLevel) {
+        this.setCurrentMapSize(MapSizeCalculator(playerLevel));
+        GameLoop.gameLoop.getViewMode().DisplayMap(this.currentMapSize);
     }
 
+    private int MapSizeCalculator(int playerLevel) {
+        return (playerLevel-1) * 5 + 10 - (playerLevel%2);
+    }
 
-    private int MapSizeCalculator() {
-        final Hero hero = GameLoop.gameLoop.getCurrentHero();
-        return (hero.getLevel()-1) * 5 + 10 - (hero.getLevel()%2);
+    public int getCurrentMapSize() {
+        return this.currentMapSize;
+    }
+
+    public void setCurrentMapSize(int size) {
+        this.currentMapSize = size;
     }
 }
