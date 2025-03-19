@@ -6,6 +6,7 @@ import com.alihaine.swingy.controller.hero.heros.Fizz;
 import com.alihaine.swingy.controller.hero.heros.Shaco;
 import com.alihaine.swingy.controller.input.Input;
 import com.alihaine.swingy.controller.input.inputs.*;
+import com.alihaine.swingy.model.Database;
 import com.alihaine.swingy.view.ViewMode;
 import com.alihaine.swingy.view.console.Console;
 import com.alihaine.swingy.view.gui.Gui;
@@ -30,6 +31,9 @@ public class GameLoop {
     private Hero currentEnemy;
 
     public void LaunchGame(String gameViewMode) {
+        Database dd = Database.db;
+        //dd.addHeroInDb(null);
+        System.exit(2);
         if (gameViewMode.equals("gui"))
             this.viewMode = new Gui();
         else

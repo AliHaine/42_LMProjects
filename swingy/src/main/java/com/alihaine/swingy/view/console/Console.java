@@ -17,7 +17,29 @@ public class Console implements ViewMode {
     private final char enemy = 'E';
     private final List<List<Character>> mapAsChar = new ArrayList<>();
 
-    public Console() {}
+    public Console() {
+        Scanner userInput = new Scanner(System.in);
+        while (true) {
+            System.out.println("Welcome, choose an action: ");
+            System.out.println("create <name> Fizz | Shaco | Yasuo");
+            System.out.println("select <id>");
+            //@NotNull @Pattern(regexp = "^[a-zA-Z]+$", message = "Only letters allowed")
+            String input;
+            try {
+                input = userInput.next();
+                if (input.contains("create")) {
+
+                } else if (input.contains("select")) {
+
+                }
+
+                System.out.println("Action not found, try again");
+            } catch (Exception e) {
+                System.exit(0);
+            }
+        }
+
+    }
 
     public void InitConsole() {
         Scanner userInput = new Scanner(System.in);
