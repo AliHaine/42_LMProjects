@@ -5,10 +5,10 @@ import com.alihaine.swingy.controller.hero.heros.Boss;
 import com.alihaine.swingy.controller.hero.heros.Fizz;
 import com.alihaine.swingy.controller.hero.heros.Shaco;
 import com.alihaine.swingy.view.ViewMode;
+import com.alihaine.swingy.view.console.Console;
 import com.alihaine.swingy.view.gui.Gui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GameLoop {
@@ -27,30 +27,34 @@ public class GameLoop {
     public void LaunchGame(String gameViewMode) {
         if (gameViewMode.equals("gui"))
             this.viewMode = new Gui();
+        else
+            this.viewMode = new Console();
         this.map = new Map(1);
         this.hero = new Fizz("MySuperFizz");
-        this.viewMode.DisplayToPosition(this.map.getCurrentMapSize() * 64 / 2 - 32, this.map.getCurrentMapSize() * 64 / 2 - 32, this.hero.getImage());
+        this.viewMode.DisplayToPosition(this.map.getCurrentMapSize() / 2, this.map.getCurrentMapSize() / 2, this.hero);
         this.viewMode.DisplayPlayerInfos(this.hero);
         this.CreateEnemies();
+        if (this.viewMode instanceof Console)
+            ((Console) this.viewMode).InitConsole();
     }
 
     public void GenerateNewMap() {
         this.map = new Map(this.hero.getLevel());
-        this.viewMode.DisplayToPosition(this.map.getCurrentMapSize() * 64 / 2 - 32, this.map.getCurrentMapSize() * 64 / 2 - 32, this.hero.getImage());
+        this.viewMode.DisplayToPosition(this.map.getCurrentMapSize(), this.map.getCurrentMapSize(), this.hero);
         this.CreateEnemies();
     }
 
     public void PlayerWinMap() {
         this.hero.addExperience(1000);
         this.GenerateNewMap();
-        this.viewMode.DisplayToPosition(this.map.getCurrentMapSize() * 64 / 2 - 32, this.map.getCurrentMapSize() * 64 / 2 - 32, this.hero.getImage());
+        this.viewMode.DisplayToPosition(this.map.getCurrentMapSize() / 2, this.map.getCurrentMapSize() / 2, this.hero);
     }
 
     private void CreateEnemies() {
         Boss boss = new Boss("BossAI");
         Shaco shaco = new Shaco("ShacoAI");
-        this.viewMode.DisplayToPosition(64 * MathRand.getRandom((this.map.getCurrentMapSize())), 64 * MathRand.getRandom((this.map.getCurrentMapSize())), boss.getImage());
-        this.viewMode.DisplayToPosition(64 * MathRand.getRandom((this.map.getCurrentMapSize())), 64 * MathRand.getRandom((this.map.getCurrentMapSize())), shaco.getImage());
+        this.viewMode.DisplayToPosition(MathRand.getRandom((this.map.getCurrentMapSize())), MathRand.getRandom((this.map.getCurrentMapSize())), boss);
+        this.viewMode.DisplayToPosition(MathRand.getRandom((this.map.getCurrentMapSize())), MathRand.getRandom((this.map.getCurrentMapSize())), shaco);
 
         this.enemiesHero.add(boss);
         this.enemiesHero.add(shaco);
@@ -94,7 +98,7 @@ public class GameLoop {
 
     public void TryToRun() {
         if (MathRand.getBoolRand()) {
-            this.viewMode.DisplayToPosition(this.hero.getLastPos()[0], this.hero.getLastPos()[1], this.hero.getImage());
+            this.viewMode.DisplayToPosition(this.hero.getLastPos()[0] / 64, this.hero.getLastPos()[1] / 64, this.hero);
             this.stats = 0;
         }
         else

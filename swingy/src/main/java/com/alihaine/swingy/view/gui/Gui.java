@@ -3,7 +3,6 @@ package com.alihaine.swingy.view.gui;
 import com.alihaine.swingy.controller.GameLoop;
 import com.alihaine.swingy.controller.hero.Hero;
 import com.alihaine.swingy.view.ViewMode;
-import org.omg.PortableInterceptor.LOCATION_FORWARD;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -13,7 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 
-public class Gui extends ViewMode implements ActionListener {
+public class Gui implements ActionListener, ViewMode {
 
     private final JFrame mainWindow = new JFrame();
     private final JPanel mainPanel = new JPanel();
@@ -24,7 +23,7 @@ public class Gui extends ViewMode implements ActionListener {
         this.InitWin();
     }
 
-    public void InitWin() {
+    private void InitWin() {
         this.mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainPanel.setLayout(null);
@@ -69,7 +68,14 @@ public class Gui extends ViewMode implements ActionListener {
     }
 
     @Override
-    public void DisplayToPosition(int x, int y, JLabel jLabel) {
+    public void DisplayToPosition(int x, int y, Hero hero) {
+        x *= 64;
+        y *= 64;
+        JLabel jLabel;
+        if (hero != null)
+            jLabel = hero.getImage();
+        else
+            jLabel = new JLabel(Images.images.getImageIconFromPath("ground"));
         jLabel.setBounds(x, y, 64, 64);
         jLabel.setBorder(new LineBorder(Color.white, 1));
         this.mainPanel.add(jLabel);
@@ -82,7 +88,7 @@ public class Gui extends ViewMode implements ActionListener {
         mainPanel.setPreferredSize(new Dimension(mapSize*64, mapSize*64));
         for (int y = 0; y < mapSize; y++) {
             for (int x = 0; x < mapSize; x++) {
-                this.DisplayToPosition(x * 64, y * 64, new JLabel(Images.images.getImageIconFromPath("ground")));
+                this.DisplayToPosition(x, y, null);
             }
         }
     }
@@ -130,7 +136,7 @@ public class Gui extends ViewMode implements ActionListener {
             if (this.IsOutOfTheMap(x, y))
                 GameLoop.gameLoop.PlayerWinMap();
             else {
-                this.DisplayToPosition(x, y, heroImage);
+                this.DisplayToPosition(x / 64, y / 64, GameLoop.gameLoop.getCurrentHero());
                 GameLoop.gameLoop.PlayerMoveTrigger();
             }
         }
