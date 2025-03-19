@@ -15,7 +15,8 @@ public class Hero {
     @Getter @Setter private int defense;
     @Getter @Setter private int hitPoint;
     @Getter private final JLabel image;
-    @Getter private int[] lastPos = new int[2];
+    @Getter private int[] currentPos = new int[2]; //xy
+    @Getter private int[] lastPos = new int[2]; //xy
 
     protected Hero(String name, String champ, JLabel image, int level, int experience, int attack, int defense, int hitPoint) {
         this.name = name;
@@ -50,6 +51,11 @@ public class Hero {
         if (this.IsLevelUp())
             this.LevelUp();
         GameLoop.gameLoop.getViewMode().DisplayPlayerInfos(this);
+    }
+
+    public void setCurrentPos(int x, int y) {
+        this.currentPos[0] = x;
+        this.currentPos[1] = y;
     }
 
     public void setLastPos(int x, int y) {

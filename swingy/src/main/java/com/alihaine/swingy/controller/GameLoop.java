@@ -4,12 +4,15 @@ import com.alihaine.swingy.controller.hero.Hero;
 import com.alihaine.swingy.controller.hero.heros.Boss;
 import com.alihaine.swingy.controller.hero.heros.Fizz;
 import com.alihaine.swingy.controller.hero.heros.Shaco;
+import com.alihaine.swingy.controller.input.Input;
+import com.alihaine.swingy.controller.input.inputs.*;
 import com.alihaine.swingy.view.ViewMode;
 import com.alihaine.swingy.view.console.Console;
 import com.alihaine.swingy.view.gui.Gui;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameLoop {
@@ -19,6 +22,7 @@ public class GameLoop {
 
     private Hero hero;
     private final List<Hero> enemiesHero = new ArrayList<>();
+    private final List<Input> inputsList = Arrays.asList(new Up(), new Down(), new Left(), new Right(), new Stats(), new Fight(), new Run(), new Leave(), new Keep(), new Exit());
     @Getter private ViewMode viewMode;
     @Getter private Map map;
     private String artifact = "";
@@ -41,7 +45,6 @@ public class GameLoop {
 
     public void GenerateNewMap() {
         this.map = new Map(this.hero.getLevel());
-        this.viewMode.DisplayToPosition(this.map.getCurrentMapSize(), this.map.getCurrentMapSize(), this.hero);
         this.CreateEnemies();
     }
 
@@ -61,8 +64,22 @@ public class GameLoop {
         this.enemiesHero.add(shaco);
     }
 
+    public void InputTrigger(String inputName) {
+        for (Input input : this.inputsList) {
+            if (input.getClass().getSimpleName().equalsIgnoreCase(inputName)) {
+                input.executor();
+                return;
+            }
+        }
+        System.out.println("Input not found");
+    }
+
     public void PlayerMoveTrigger() {
-        Hero enemyHero = this.IsPlayerInAnEnemy();
+        Hero enemyHero = null;
+        if (this.getViewMode() instanceof Gui)
+            enemyHero = this.IsPlayerInAnEnemy();
+        else
+            enemyHero = this.IsPlayerInAnEnemyCon();
         if (enemyHero != null) {
             this.currentEnemy = enemyHero;
             this.stats = 1;
@@ -99,6 +116,8 @@ public class GameLoop {
 
     public void TryToRun() {
         if (MathRand.getBoolRand()) {
+            if (this.getViewMode() instanceof Console)
+                this.viewMode.DisplayToPosition(this.hero.getCurrentPos()[0], this.hero.getCurrentPos()[1], this.enemiesHero.get(0));
             this.viewMode.DisplayToPosition(this.hero.getLastPos()[0] / 64, this.hero.getLastPos()[1] / 64, this.hero);
             this.stats = 0;
         }
@@ -119,6 +138,16 @@ public class GameLoop {
 
         for (Hero enemy : this.enemiesHero) {
             if (enemy.getImage().getX() == x && enemy.getImage().getY() == y)
+                return enemy;
+        }
+        return null;
+    }
+
+    private Hero IsPlayerInAnEnemyCon() {
+        int[] pos = this.getCurrentHero().getCurrentPos();
+
+        for (Hero enemy : this.enemiesHero) {
+            if (enemy.getCurrentPos()[0] == pos[0] && enemy.getCurrentPos()[1] == pos[1])
                 return enemy;
         }
         return null;

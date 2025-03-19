@@ -1,5 +1,6 @@
 package com.alihaine.swingy.controller;
 
+import com.alihaine.swingy.view.gui.Gui;
 import lombok.Getter;
 import lombok.Setter;
 
