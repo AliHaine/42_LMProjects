@@ -7,6 +7,7 @@ import com.alihaine.swingy.controller.hero.heros.Shaco;
 import com.alihaine.swingy.view.ViewMode;
 import com.alihaine.swingy.view.console.Console;
 import com.alihaine.swingy.view.gui.Gui;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,8 @@ public class GameLoop {
 
     private Hero hero;
     private final List<Hero> enemiesHero = new ArrayList<>();
-    private ViewMode viewMode;
-    private Map map;
+    @Getter private ViewMode viewMode;
+    @Getter private Map map;
     private String artifact = "";
     public int stats = 0; //0 = no in combat, 1 == wait for fight or leave, 2 == in combat, 3 == keep or not
     private Hero currentEnemy;
@@ -157,13 +158,4 @@ public class GameLoop {
     public Hero getCurrentHero() {
         return this.hero;
     }
-
-    public ViewMode getViewMode() {
-        return this.viewMode;
-    }
-
-    public Map getCurrentMap() {
-        return this.map;
-    }
-
 }

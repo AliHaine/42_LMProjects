@@ -101,7 +101,7 @@ public class Gui implements ActionListener, ViewMode {
 
     @Override
     public boolean IsOutOfTheMap(int x, int y) {
-        int mapSize = GameLoop.gameLoop.getCurrentMap().getCurrentMapSize();
+        int mapSize = GameLoop.gameLoop.getMap().getCurrentMapSize();
         if (x < 0 || y < 0 || x / 64 >= mapSize || y / 64 >= mapSize)
             return true;
         return false;
