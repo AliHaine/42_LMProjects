@@ -76,7 +76,6 @@ public class GameLoop {
                 return;
             }
         }
-        System.out.println("Input not found");
     }
 
     public void PlayerMoveTrigger() {

@@ -5,12 +5,18 @@ import com.alihaine.swingy.controller.GameLoop;
 import com.alihaine.swingy.controller.hero.Hero;
 import com.alihaine.swingy.model.Database;
 import com.alihaine.swingy.view.ViewMode;
-import com.sun.istack.internal.NotNull;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Console implements ViewMode {
 
@@ -19,6 +25,8 @@ public class Console implements ViewMode {
     private final char enemy = 'E';
     public boolean activated = false;
     private final List<List<Character>> mapAsChar = new ArrayList<>();
+    @Pattern(regexp = "^[a-zA-Z]+$") @Size(min=1, max=50) @Pattern(regexp = "^(?i)(Up|Down|Right|Left|Keep|Leave|Fight|Run|Stats|Switch|Exit)$")
+    String input;
 
     public Console(Hero hero) {
         this.activated = true;
@@ -98,14 +106,27 @@ public class Console implements ViewMode {
             }
             System.out.println("----------------------------------------------");
             System.out.print("Action to do: ");
-            //@NotNull @Pattern(regexp = "^[a-zA-Z]+$", message = "Only letters allowed")
-            String input;
             try {
-                input = userInput.next();
+                this.input = userInput.next();
             } catch (Exception e) {
                 break;
             }
-            GameLoop.gameLoop.InputTrigger(input);
+
+            ValidatorFactory factory = Validation.byDefaultProvider()
+                    .configure()
+                    .messageInterpolator(new ParameterMessageInterpolator()) // Disables EL
+                    .buildValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<Console>> violations = validator.validate(this);
+
+            // Check if there are validation errors
+            if (!violations.isEmpty()) {
+                for (ConstraintViolation<Console> violation : violations) {
+                    System.out.println("Validation Error: " + violation.getMessage());
+                }
+                continue;
+            }
+            GameLoop.gameLoop.InputTrigger(this.input);
         }
         System.out.println("Good bye.");
     }
