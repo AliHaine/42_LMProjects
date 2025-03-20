@@ -1,12 +1,15 @@
 package com.alihaine.swingy.view.gui;
 
+import com.alihaine.swingy.controller.Creator;
 import com.alihaine.swingy.controller.GameLoop;
 import com.alihaine.swingy.controller.hero.Hero;
 import com.alihaine.swingy.controller.hero.heros.Fizz;
+import com.alihaine.swingy.model.Database;
 import com.alihaine.swingy.view.ViewMode;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,12 +24,86 @@ public class Gui implements ActionListener, ViewMode {
     private final JPanel textPanel = new JPanel();
 
     public Gui() {
-        this.InitWin();
         GameLoop.gameLoop.setViewMode(this);
-        GameLoop.gameLoop.RunGame(new Fizz("sa"));
+        this.StartWin();
     }
 
-    private void InitWin() {
+    private void StartWin() {
+        final JFrame startWindow = new JFrame();
+        startWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        startWindow.setBackground(Color.BLACK);
+
+        final JTextField error = new JTextField("Welcome, choose an action");
+
+        final JPanel selectPanel = new JPanel();
+        final JTextField textField = new JTextField();
+        textField.setPreferredSize(new Dimension(64, 34));
+        final JButton selectButton = new JButton("Select");
+        selectButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int val;
+                try {
+                    val = Integer.parseInt(textField.getText());
+                } catch (Exception ee) {
+                    error.setText("Error, hero not found");
+                    error.updateUI();
+                    return;
+                }
+                List<String> heroAsString = Database.db.GetDatabaseRow(val);
+                if (heroAsString == null) {
+                    error.setText("Error, hero not found");
+                    error.updateUI();
+                } else {
+                    Hero hero = Creator.HeroCreator(heroAsString);
+                    startWindow.dispose();
+                    ((Gui)GameLoop.gameLoop.getViewMode()).InitWin(hero);
+                }
+            }
+        });
+
+        selectPanel.add(textField);
+        selectPanel.add(selectButton);
+        selectPanel.setBackground(Color.BLACK);
+
+        final JPanel createPanel = new JPanel();
+        final JTextField textField1 = new JTextField();
+        textField1.setPreferredSize(new Dimension(64, 34));
+        final JTextField textField2 = new JTextField();
+        textField2.setPreferredSize(new Dimension(64, 34));
+        final JButton createButton = new JButton("Create");
+        createButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (textField1.getText().isEmpty() || textField1.getText().length() > 100) {
+                    error.setText("Name too long or empty");
+                    error.updateUI();
+                    return;
+                }
+                if (!textField2.getText().equalsIgnoreCase("shaco") && !textField2.getText().equalsIgnoreCase("yasuo") && !textField2.getText().equalsIgnoreCase("fizz")) {
+                    error.setText("Unknow type");
+                    error.updateUI();
+                    return;
+                }
+                Hero hero = Creator.HeroCreator(textField1.getText(), textField2.getText());
+                Database.db.AddData(hero);
+                hero.setId(Database.db.GetLastId());
+
+                startWindow.dispose();
+                ((Gui)GameLoop.gameLoop.getViewMode()).InitWin(hero);
+            }
+        });
+        selectPanel.add(textField1);
+        selectPanel.add(textField2);
+        selectPanel.add(createButton);
+        selectPanel.add(error);
+        selectPanel.setBackground(Color.BLACK);
+
+        startWindow.add(createPanel, BorderLayout.CENTER);
+        startWindow.add(selectPanel, BorderLayout.CENTER);
+        startWindow.setVisible(true);
+
+    }
+
+    public void InitWin(Hero hero) {
         this.mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainPanel.setLayout(null);
@@ -37,6 +114,7 @@ public class Gui implements ActionListener, ViewMode {
         this.InitTextPanel();
 
         mainWindow.setVisible(true);
+        GameLoop.gameLoop.RunGame(hero);
     }
 
     private void InitMainPanel() {

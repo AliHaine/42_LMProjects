@@ -187,6 +187,7 @@ public class GameLoop {
             this.hero.setDefense(this.hero.getDefense() + value);
         this.stats = 0;
         this.viewMode.DisplayPlayerInfos(this.hero);
+        Database.db.UpdateData(this.getCurrentHero());
     }
 
     public Hero getCurrentHero() {

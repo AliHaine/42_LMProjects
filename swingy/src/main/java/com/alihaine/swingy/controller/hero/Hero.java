@@ -1,6 +1,7 @@
 package com.alihaine.swingy.controller.hero;
 
 import com.alihaine.swingy.controller.GameLoop;
+import com.alihaine.swingy.model.Database;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,7 +40,7 @@ public class Hero {
         this.experience = 0;
         this.attack++;
         this.defense++;
-        this.hitPoint = 100 + 10 * this.level;
+        this.hitPoint += 2 * this.level;
     }
 
     private int LevelCalculator() {
@@ -52,6 +53,7 @@ public class Hero {
         if (this.IsLevelUp())
             this.LevelUp();
         GameLoop.gameLoop.getViewMode().DisplayPlayerInfos(this);
+        Database.db.UpdateData(this);
     }
 
     public void setCurrentPos(int x, int y) {

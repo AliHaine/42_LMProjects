@@ -28,12 +28,9 @@ public class Database {
     public void UpdateData(Hero hero) {
         String updateQuery = "UPDATE users SET name = ?, champ = ?, level = ?, experience = ?, attack = ?, defense = ?, hitpoint = ? WHERE id = ?";
 
-        // Prepare statement
-        PreparedStatement stmt = null;
         try {
-            stmt = conn.prepareStatement(updateQuery);
+            PreparedStatement stmt = conn.prepareStatement(updateQuery);
 
-            // Set values for the query
             stmt.setString(1, hero.getName());
             stmt.setString(2, hero.getChamp());
             stmt.setInt(3, hero.getLevel());
