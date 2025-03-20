@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.swing.*;
 
 public class Hero {
-    @Getter private int id;
+    @Getter @Setter private int id;
     @Getter private final String name;
     @Getter private final String champ;
     @Getter private int level;

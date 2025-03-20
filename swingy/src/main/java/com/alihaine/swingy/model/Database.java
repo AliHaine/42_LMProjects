@@ -2,10 +2,9 @@ package com.alihaine.swingy.model;
 
 import com.alihaine.swingy.controller.hero.Hero;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
 
@@ -42,22 +41,75 @@ public class Database {
             stmt.setInt(5, hero.getAttack());
             stmt.setInt(6, hero.getDefense());
             stmt.setInt(7, hero.getHitPoint());
-            stmt.setInt(8, hero.getId());  // Assuming you want to update the row with id = 1
+            stmt.setInt(8, hero.getId());
 
-            // Execute the update
             stmt.executeUpdate();
+            System.out.println("Database save");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void AddData(Hero hero) {
-        String sql = "INSERT INTO users (name, champ, level, experience, attack, defense, hitpoint) VALUES ('Test', 'Fizz', 0, 0, 0, 0, 0)";
+        String sql = "INSERT INTO users (name, champ, level, experience, attack, defense, hitpoint) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, hero.getName());
+            ps.setString(2, hero.getChamp());
+            ps.setInt(3, hero.getLevel());
+            ps.setInt(4, hero.getExperience());
+            ps.setInt(5, hero.getAttack());
+            ps.setInt(6, hero.getDefense());
+            ps.setInt(7, hero.getHitPoint());
+
             ps.executeUpdate();
+            System.out.println("Database save");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public int GetLastId() {
+        String sql = "SELECT MAX(id) FROM users;";
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            System.exit(5);
+            System.out.println("Database fatal error");
+        }
+        return 0;
+    }
+
+    public List<String> GetDatabaseRow(int id) {
+        String sql = "SELECT * FROM users WHERE id=" + id;
+        List<String> values = null;
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            if (rs.next()) {
+                values = new ArrayList<>();
+
+                values.add(String.valueOf(rs.getInt("id")));
+                values.add(rs.getString("name"));
+                values.add(rs.getString("champ"));
+                values.add(String.valueOf(rs.getInt("level")));
+                values.add(String.valueOf(rs.getInt("experience")));
+                values.add(String.valueOf(rs.getInt("attack")));
+                values.add(String.valueOf(rs.getInt("defense")));
+                values.add(String.valueOf(rs.getInt("hitpoint")));
+            }
+        } catch (SQLException e) {
+            System.exit(5);
+            System.out.println("Database fatal error");
+        }
+        return values;
     }
 }

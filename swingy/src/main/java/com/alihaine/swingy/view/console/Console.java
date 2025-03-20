@@ -1,12 +1,16 @@
 package com.alihaine.swingy.view.console;
 
+import com.alihaine.swingy.controller.Creator;
 import com.alihaine.swingy.controller.GameLoop;
 import com.alihaine.swingy.controller.hero.Hero;
+import com.alihaine.swingy.model.Database;
 import com.alihaine.swingy.view.ViewMode;
 import com.sun.istack.internal.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,6 +23,7 @@ public class Console implements ViewMode {
 
     public Console() {
         Scanner userInput = new Scanner(System.in);
+        Hero hero = null;
         while (true) {
             System.out.println("Welcome, choose an action: ");
             System.out.println("create <name> Fizz | Shaco | Yasuo");
@@ -26,11 +31,27 @@ public class Console implements ViewMode {
             //@NotNull @Pattern(regexp = "^[a-zA-Z]+$", message = "Only letters allowed")
             String input;
             try {
-                input = userInput.next();
+                input = userInput.nextLine();
                 if (input.contains("create")) {
-
+                    final String[] values = input.split(" ");
+                    if (!this.CheckInputs(values)) {
+                        System.out.println("Error with " + input);
+                        continue;
+                    }
+                    hero = Creator.HeroCreator(values[1], values[2]);
+                    Database.db.AddData(hero);
+                    hero.setId( Database.db.GetLastId());
+                    break;
                 } else if (input.contains("select")) {
-
+                    final String[] values = input.split(" ");
+                    final int val = Integer.parseInt(values[1]);
+                    final List<String> heroAsString = Database.db.GetDatabaseRow(val);
+                    if (heroAsString == null) {
+                        System.out.println("No hero with this id found..");
+                        continue;
+                    }
+                    hero = Creator.HeroCreator(heroAsString);
+                    break;
                 }
 
                 System.out.println("Action not found, try again");
@@ -38,7 +59,20 @@ public class Console implements ViewMode {
                 System.exit(0);
             }
         }
+        GameLoop.gameLoop.setViewMode(this);
+        GameLoop.gameLoop.RunGame(hero);
+    }
 
+    private boolean CheckInputs(String[] inputs) {
+        if (inputs.length != 3)
+            return false;
+        else if (!inputs[0].equalsIgnoreCase("create"))
+            return false;
+        else if (inputs[1].length() > 100)
+            return false;
+        else if (!inputs[2].equalsIgnoreCase("shaco") && !inputs[2].equalsIgnoreCase("fizz") && !inputs[2].equalsIgnoreCase("yasuo"))
+            return false;
+        return true;
     }
 
     public void InitConsole() {

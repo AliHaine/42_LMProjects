@@ -11,6 +11,7 @@ import com.alihaine.swingy.view.ViewMode;
 import com.alihaine.swingy.view.console.Console;
 import com.alihaine.swingy.view.gui.Gui;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,22 +25,22 @@ public class GameLoop {
     private Hero hero;
     private final List<Hero> enemiesHero = new ArrayList<>();
     private final List<Input> inputsList = Arrays.asList(new Up(), new Down(), new Left(), new Right(), new Stats(), new Fight(), new Run(), new Leave(), new Keep(), new Exit());
-    @Getter private ViewMode viewMode;
+    @Getter @Setter private ViewMode viewMode;
     @Getter private Map map;
     private String artifact = "";
     public int stats = 0; //0 = no in combat, 1 == wait for fight or leave, 2 == in combat, 3 == keep or not
     private Hero currentEnemy;
 
     public void LaunchGame(String gameViewMode) {
-        Database dd = Database.db;
-        //dd.addHeroInDb(null);
-        System.exit(2);
         if (gameViewMode.equals("gui"))
-            this.viewMode = new Gui();
+            new Gui();
         else
-            this.viewMode = new Console();
-        this.map = new Map(1);
-        this.hero = new Fizz("MySuperFizz");
+            new Console();
+    }
+
+    public void RunGame(Hero hero) {
+        this.map = new Map(hero.getLevel());
+        this.hero = hero;
         this.viewMode.DisplayToPosition(this.map.getCurrentMapSize() / 2, this.map.getCurrentMapSize() / 2, this.hero);
         this.viewMode.DisplayPlayerInfos(this.hero);
         this.CreateEnemies();

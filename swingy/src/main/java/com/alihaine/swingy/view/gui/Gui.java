@@ -2,6 +2,7 @@ package com.alihaine.swingy.view.gui;
 
 import com.alihaine.swingy.controller.GameLoop;
 import com.alihaine.swingy.controller.hero.Hero;
+import com.alihaine.swingy.controller.hero.heros.Fizz;
 import com.alihaine.swingy.view.ViewMode;
 
 import javax.swing.*;
@@ -21,6 +22,8 @@ public class Gui implements ActionListener, ViewMode {
 
     public Gui() {
         this.InitWin();
+        GameLoop.gameLoop.setViewMode(this);
+        GameLoop.gameLoop.RunGame(new Fizz("sa"));
     }
 
     private void InitWin() {
