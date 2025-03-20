@@ -28,6 +28,11 @@ public class Gui implements ActionListener, ViewMode {
         this.StartWin();
     }
 
+    public Gui(Hero hero) {
+        GameLoop.gameLoop.setViewMode(this);
+        this.InitWin(hero);
+    }
+
     private void StartWin() {
         final JFrame startWindow = new JFrame();
         startWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -125,7 +130,7 @@ public class Gui implements ActionListener, ViewMode {
     }
 
     private void InitInputPanel() {
-        List<JButton> buttons = Arrays.asList(new JButton("Up"), new JButton("Down"), new JButton("Left"), new JButton("Right"), new JButton("Keep"), new JButton("Leave"), new JButton("Fight"), new JButton("Run"), new JButton("Exit"));
+        List<JButton> buttons = Arrays.asList(new JButton("Up"), new JButton("Down"), new JButton("Left"), new JButton("Right"), new JButton("Keep"), new JButton("Leave"), new JButton("Fight"), new JButton("Run"), new JButton("Switch") ,new JButton("Exit"));
 
         buttons.forEach(button -> {
             button.addActionListener(this);
@@ -200,6 +205,11 @@ public class Gui implements ActionListener, ViewMode {
     @Override
     public void actionPerformed(ActionEvent e) {
         int x, y, stats;
+        if (e.getActionCommand().equals("Switch")) {
+            GameLoop.gameLoop.SwitchView();
+            return;
+        }
+
         JLabel heroImage = GameLoop.gameLoop.getCurrentHero().getImage();
         x = heroImage.getX();
         y = heroImage.getY();
@@ -221,8 +231,10 @@ public class Gui implements ActionListener, ViewMode {
                 GameLoop.gameLoop.PlayerMoveTrigger();
             }
         }
-        else if (e.getActionCommand().equals("Exit"))
+        else if (e.getActionCommand().equals("Exit")) {
+            Database.db.UpdateData(GameLoop.gameLoop.getCurrentHero());
             System.exit(0);
+        }
         else if (e.getActionCommand().equals("Keep") && stats == 3)
             GameLoop.gameLoop.KeepArtifact();
         else if (e.getActionCommand().equals("Leave") && stats == 3)
@@ -231,5 +243,9 @@ public class Gui implements ActionListener, ViewMode {
             GameLoop.gameLoop.LaunchFight();
         else if (e.getActionCommand().equals("Run") && stats == 1)
             GameLoop.gameLoop.TryToRun();
+    }
+
+    public void CloseAll() {
+        this.mainWindow.dispose();
     }
 }

@@ -24,7 +24,7 @@ public class GameLoop {
 
     private Hero hero;
     private final List<Hero> enemiesHero = new ArrayList<>();
-    private final List<Input> inputsList = Arrays.asList(new Up(), new Down(), new Left(), new Right(), new Stats(), new Fight(), new Run(), new Leave(), new Keep(), new Exit());
+    private final List<Input> inputsList = Arrays.asList(new Up(), new Down(), new Left(), new Right(), new Stats(), new Fight(), new Run(), new Leave(), new Keep(), new Exit(), new Switch());
     @Getter @Setter private ViewMode viewMode;
     @Getter private Map map;
     private String artifact = "";
@@ -192,5 +192,15 @@ public class GameLoop {
 
     public Hero getCurrentHero() {
         return this.hero;
+    }
+
+    public void SwitchView() {
+        if (this.viewMode instanceof Console) {
+            ((Console) this.viewMode).activated = false;
+            new Gui(this.getCurrentHero());
+        } else {
+            ((Gui) this.viewMode).CloseAll();
+            new Console(this.getCurrentHero());
+        }
     }
 }

@@ -13,15 +13,14 @@ public class Database {
 
     private Database() {
         try {
-            String url = "jdbc:mysql://localhost:3310/data";  // Replace "data" with your actual database name
+            String url = "jdbc:mysql://localhost:3310/data";
             String user = "root";
             String password = "pass";
 
-            // Establishing the connection
             conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Connection successful!");
         } catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("Database fatal error");
+            System.exit(5);
         }
     }
 
@@ -43,7 +42,8 @@ public class Database {
             stmt.executeUpdate();
             System.out.println("Database save");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("Database fatal error");
+            System.exit(5);
         }
     }
 
@@ -78,8 +78,8 @@ public class Database {
             rs.next();
             return rs.getInt(1);
         } catch (SQLException e) {
-            System.exit(5);
             System.out.println("Database fatal error");
+            System.exit(5);
         }
         return 0;
     }
@@ -104,8 +104,8 @@ public class Database {
                 values.add(String.valueOf(rs.getInt("hitpoint")));
             }
         } catch (SQLException e) {
-            System.exit(5);
             System.out.println("Database fatal error");
+            System.exit(5);
         }
         return values;
     }

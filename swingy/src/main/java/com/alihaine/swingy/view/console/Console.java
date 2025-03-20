@@ -8,9 +8,7 @@ import com.alihaine.swingy.view.ViewMode;
 import com.sun.istack.internal.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,12 +17,20 @@ public class Console implements ViewMode {
     private final char wall = '■';
     private final char player = 'P';
     private final char enemy = 'E';
+    public boolean activated = false;
     private final List<List<Character>> mapAsChar = new ArrayList<>();
 
+    public Console(Hero hero) {
+        this.activated = true;
+        GameLoop.gameLoop.setViewMode(this);
+        GameLoop.gameLoop.RunGame(hero);
+    }
+
     public Console() {
+        this.activated = true;
         Scanner userInput = new Scanner(System.in);
         Hero hero = null;
-        while (true) {
+        while (activated) {
             System.out.println("Welcome, choose an action: ");
             System.out.println("create <name> Fizz | Shaco | Yasuo");
             System.out.println("select <id>");
@@ -44,7 +50,13 @@ public class Console implements ViewMode {
                     break;
                 } else if (input.contains("select")) {
                     final String[] values = input.split(" ");
-                    final int val = Integer.parseInt(values[1]);
+                    final int val;
+                    try {
+                        val = Integer.parseInt(values[1]);
+                    } catch (Exception e) {
+                        System.out.println("Error with selection");
+                        continue;
+                    }
                     final List<String> heroAsString = Database.db.GetDatabaseRow(val);
                     if (heroAsString == null) {
                         System.out.println("No hero with this id found..");
@@ -68,7 +80,7 @@ public class Console implements ViewMode {
             return false;
         else if (!inputs[0].equalsIgnoreCase("create"))
             return false;
-        else if (inputs[1].length() > 100)
+        else if (inputs[1].isEmpty() || inputs[1].length() > 100)
             return false;
         else if (!inputs[2].equalsIgnoreCase("shaco") && !inputs[2].equalsIgnoreCase("fizz") && !inputs[2].equalsIgnoreCase("yasuo"))
             return false;
@@ -77,7 +89,7 @@ public class Console implements ViewMode {
 
     public void InitConsole() {
         Scanner userInput = new Scanner(System.in);
-        while (true) {
+        while (this.activated) {
             for (List<Character> lines : mapAsChar) {
                 for (Character character : lines) {
                     System.out.print(character);
