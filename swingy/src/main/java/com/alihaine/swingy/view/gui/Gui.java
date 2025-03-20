@@ -208,6 +208,9 @@ public class Gui implements ActionListener, ViewMode {
         if (e.getActionCommand().equals("Switch")) {
             GameLoop.gameLoop.SwitchView();
             return;
+        } else if (e.getActionCommand().equals("Exit")) {
+            Database.db.UpdateData(GameLoop.gameLoop.getCurrentHero());
+            System.exit(0);
         }
 
         JLabel heroImage = GameLoop.gameLoop.getCurrentHero().getImage();
@@ -230,10 +233,6 @@ public class Gui implements ActionListener, ViewMode {
                 this.DisplayToPosition(x / 64, y / 64, GameLoop.gameLoop.getCurrentHero());
                 GameLoop.gameLoop.PlayerMoveTrigger();
             }
-        }
-        else if (e.getActionCommand().equals("Exit")) {
-            Database.db.UpdateData(GameLoop.gameLoop.getCurrentHero());
-            System.exit(0);
         }
         else if (e.getActionCommand().equals("Keep") && stats == 3)
             GameLoop.gameLoop.KeepArtifact();
