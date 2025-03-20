@@ -19,7 +19,7 @@ public class Database {
 
             conn = DriverManager.getConnection(url, user, password);
         } catch (SQLException ex) {
-            System.out.println("Database fatal error");
+            System.out.println("Database fatal error " + ex);
             System.exit(5);
         }
     }
